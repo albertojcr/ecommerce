@@ -18,7 +18,6 @@
                 @auth
                     <x-jet-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <i class="fas fa-user-circle text-white text-3xl cursor-pointer"></i>
                             <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                 <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             </button>
@@ -48,6 +47,23 @@
                             </form>
                         </x-slot>
                     </x-jet-dropdown>
+
+                @else
+                    <x-jet-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <i class="fas fa-user-circle text-white text-3xl cursor-pointer"></i>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-jet-dropdown-link href="{{ route('login') }}">
+                                {{ __('Login') }}
+                            </x-jet-dropdown-link>
+
+                            <x-jet-dropdown-link href="{{ route('register') }}">
+                                {{ __('Register') }}
+                            </x-jet-dropdown-link>
+                        </x-slot>
+                    </x-jet-dropdown>
                 @endauth
             </div>
 
@@ -61,9 +77,10 @@
                         @foreach($categories as $category)
                             <li class="navigation-link text-trueGray-500 hover:bg-orange-500 hover:text-white">
                                 <a href="" class="py-2 px-4 text-sm flex items-center">
- <span class="flex justify-center w-9">
- {!! $category->icon !!}
- </span>
+
+                                    <span class="flex justify-center w-9">
+                                        {!! $category->icon !!}
+                                    </span>
                                     {{ $category->name }}
                                 </a>
                                 <div class="navigation-submenu bg-gray-100 absolute w-3/4 h-full top-0 right-0 hidden">
