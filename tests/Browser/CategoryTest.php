@@ -33,22 +33,7 @@ class CategoryTest extends DuskTestCase
                 ->assertSee('Celulares y smartphones')
                 ->assertSee('Accesorios para celulares')
                 ->assertSee('Smartwatches')
-                ->screenshot('celulares-subcategories')
-/*                ->assertDontSee('TV y audio')
-                ->assertDontSee('Audios')
-                ->assertDontSee('Audio para autos')
-                ->assertDontSee('Xbox')
-                ->assertDontSee('Play Station')
-                ->assertDontSee('Videojuegos para PC')
-                ->assertDontSee('Nintendo')
-                ->assertDontSee('Portátiles')
-                ->assertDontSee('PC escritorio')
-                ->assertDontSee('Almacenamiento')
-                ->assertDontSee('Accesorios computadoras')
-                ->assertDontSee('Mujeres')
-                ->assertDontSee('Hombres')
-                ->assertDontSee('Lentes')
-                ->assertDontSee('Relojes')*/;
+                ->screenshot('celulares-subcategories');
         });
     }
 
@@ -62,22 +47,7 @@ class CategoryTest extends DuskTestCase
                 ->assertSee('TV y audio')
                 ->assertSee('Audios')
                 ->assertSee('Audio para autos')
-                ->screenshot('tv-subcategories')
-/*                ->assertDontSee('Celulares y smartphones')
-                ->assertDontSee('Accesorios para celulares')
-                ->assertDontSee('Smartwatches')
-                ->assertDontSee('Xbox')
-                ->assertDontSee('Play Station')
-                ->assertDontSee('Videojuegos para PC')
-                ->assertDontSee('Nintendo')
-                ->assertDontSee('Portátiles')
-                ->assertDontSee('PC escritorio')
-                ->assertDontSee('Almacenamiento')
-                ->assertDontSee('Accesorios computadoras')
-                ->assertDontSee('Mujeres')
-                ->assertDontSee('Hombres')
-                ->assertDontSee('Lentes')
-                ->assertDontSee('Relojes')*/;
+                ->screenshot('tv-subcategories');
         });
     }
 
@@ -92,21 +62,7 @@ class CategoryTest extends DuskTestCase
                 ->assertSee('Play Station')
                 ->assertSee('Videojuegos para PC')
                 ->assertSee('Nintendo')
-                ->screenshot('consola-subcategories')
-/*                ->assertDontSee('TV y audio')
-                ->assertDontSee('Audios')
-                ->assertDontSee('Audio para autos')
-                ->assertDontSee('Celulares y smartphones')
-                ->assertDontSee('Accesorios para celulares')
-                ->assertDontSee('Smartwatches')
-                ->assertDontSee('Portátiles')
-                ->assertDontSee('PC escritorio')
-                ->assertDontSee('Almacenamiento')
-                ->assertDontSee('Accesorios computadoras')
-                ->assertDontSee('Mujeres')
-                ->assertDontSee('Hombres')
-                ->assertDontSee('Lentes')
-                ->assertDontSee('Relojes')*/;
+                ->screenshot('consola-subcategories');
         });
     }
 
@@ -121,21 +77,7 @@ class CategoryTest extends DuskTestCase
                 ->assertSee('PC escritorio')
                 ->assertSee('Almacenamiento')
                 ->assertSee('Accesorios computadoras')
-                ->screenshot('computacion-subcategories')
-/*                ->assertDontSee('Xbox')
-                ->assertDontSee('Play Station')
-                ->assertDontSee('Videojuegos para PC')
-                ->assertDontSee('Nintendo')
-                ->assertDontSee('TV y audio')
-                ->assertDontSee('Audios')
-                ->assertDontSee('Audio para autos')
-                ->assertDontSee('Celulares y smartphones')
-                ->assertDontSee('Accesorios para celulares')
-                ->assertDontSee('Smartwatches')
-                ->assertDontSee('Mujeres')
-                ->assertDontSee('Hombres')
-                ->assertDontSee('Lentes')
-                ->assertDontSee('Relojes')*/;
+                ->screenshot('computacion-subcategories');
         });
     }
 
@@ -150,21 +92,7 @@ class CategoryTest extends DuskTestCase
                 ->assertSee('Hombres')
                 ->assertSee('Lentes')
                 ->assertSee('Relojes')
-                ->screenshot('moda-subcategories')
-/*                ->assertDontSee('Portátiles')
-                ->assertDontSee('PC escritorio')
-                ->assertDontSee('Almacenamiento')
-                ->assertDontSee('Accesorios computadoras')
-                ->assertDontSee('Xbox')
-                ->assertDontSee('Play Station')
-                ->assertDontSee('Videojuegos para PC')
-                ->assertDontSee('Nintendo')
-                ->assertDontSee('TV y audio')
-                ->assertDontSee('Audios')
-                ->assertDontSee('Audio para autos')
-                ->assertDontSee('Celulares y smartphones')
-                ->assertDontSee('Accesorios para celulares')
-                ->assertDontSee('Smartwatches')*/;
+                ->screenshot('moda-subcategories');
         });
     }
 }
