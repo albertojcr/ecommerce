@@ -2,38 +2,74 @@
 
 namespace Tests\Browser;
 
+use App\Models\Category;
+use App\Models\Subcategory;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 class CategoryTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
+    // Para que ejecute seeders antes de cada prueba
+    // No es práctico, tarda mucho
+/*    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->artisan('db:seed');
+    }*/
 
     /** @test */
     public function it_shows_the_categories_when_clicking_the_categories_button()
     {
-        $this->browse(function (Browser $browser) {
+        $firstCategory = Category::factory()->create([
+            'name' => 'Primera categoría'
+        ]);
+
+        $secondCategory = Category::factory()->create([
+            'name' => 'Segunda categoría'
+        ]);
+
+        $this->browse(function (Browser $browser) use ($firstCategory, $secondCategory) {
             $browser->visit('/')
                 ->click('@categories-button')
-                ->assertSee('Celulares y tablets')
-                ->assertSee('TV, audio y video')
-                ->assertSee('Consola y videojuegos')
-                ->assertSee('Computación')
-                ->assertSee('Moda');
+                ->assertSee($firstCategory->name)
+                ->assertSee($secondCategory->name)
+                ->screenshot('show-categories');
         });
     }
 
     /** @test */
-    public function it_shows_the_celulares_subcategories_when_hovering_its_button()
+    public function it_shows_the_subcategories_of_a_category_when_hovering_it()
     {
-        $this->browse(function (Browser $browser) {
+        $firstCategory = Category::factory()->create([
+            'name' => 'Primera categoría'
+        ]);
+
+        $secondCategory = Category::factory()->create([
+            'name' => 'Segunda categoría'
+        ]);
+
+        $firstSubcategory = Subcategory::factory()->create([
+            'name' => 'Primera subcategoría',
+            'category_id' => $firstCategory->id
+        ]);
+
+        $secondSubcategory = Subcategory::factory()->create([
+            'name' => 'Segunda subcategoría',
+            'category_id' => $secondCategory->id
+        ]);
+
+        $this->browse(function (Browser $browser) use ($firstCategory, $firstSubcategory, $secondSubcategory) {
             $browser->visit('/')
                 ->click('@categories-button')
-                ->mouseover('@category-1')
-                ->assertSee('Celulares y smartphones')
-                ->assertSee('Accesorios para celulares')
-                ->assertSee('Smartwatches')
-                ->screenshot('celulares-subcategories');
+                ->mouseover('@category-' . $firstCategory->id)
+                ->assertSee($firstSubcategory->name)
+                ->assertDontSee($secondSubcategory->name)
+                ->screenshot('show-subcategories');
         });
     }
 
