@@ -13,6 +13,7 @@
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/glider-js/glider.min.css') }}">
 
         @livewireStyles
 
@@ -34,6 +35,9 @@
         @stack('modals')
 
         @livewireScripts
+
+        {{-- Glider.js --}}
+        <script src="{{ asset('vendor/glider-js/glider.min.js') }}"></script>
 
         <script>
             function dropdown(){
