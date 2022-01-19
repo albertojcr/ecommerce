@@ -19,6 +19,7 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="{{ asset('vendor/glider-js/glider.min.js') }}"></script>
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />
@@ -35,9 +36,6 @@
         @stack('modals')
 
         @livewireScripts
-
-        {{-- Glider.js --}}
-        <script src="{{ asset('vendor/glider-js/glider.min.js') }}"></script>
 
         <script>
             function dropdown(){
@@ -59,5 +57,7 @@
                 }
             }
         </script>
+
+        @stack('scripts')
     </body>
 </html>
