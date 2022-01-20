@@ -2,7 +2,9 @@
 
 namespace Tests\Browser;
 
+use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -13,16 +15,39 @@ class CategoryTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
+    protected function createCategory()
+    {
+        return Category::factory()->create();
+    }
+
+    protected function createSubcategory($categoryId)
+    {
+        return Subcategory::factory()->create([
+            'category_id' => $categoryId
+        ]);
+    }
+
+    protected function createProduct($status = 2)
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = Brand::factory()->create();
+        $product = Product::factory()->create([
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+            'quantity' => '',
+            'status' => $status
+        ]);
+
+        return $product;
+    }
+
     /** @test */
     public function it_shows_the_categories_when_clicking_the_categories_button()
     {
-        $firstCategory = Category::factory()->create([
-            'name' => 'Primera categoría'
-        ]);
+        $firstCategory = $this->createCategory();
 
-        $secondCategory = Category::factory()->create([
-            'name' => 'Segunda categoría'
-        ]);
+        $secondCategory = $this->createCategory();
 
         $this->browse(function (Browser $browser) use ($firstCategory, $secondCategory) {
             $browser->visit('/')
@@ -36,23 +61,11 @@ class CategoryTest extends DuskTestCase
     /** @test */
     public function it_shows_the_subcategories_of_a_category_when_hovering_it()
     {
-        $firstCategory = Category::factory()->create([
-            'name' => 'Primera categoría'
-        ]);
+        $firstCategory = $this->createCategory();
+        $secondCategory = $this->createCategory();
 
-        $secondCategory = Category::factory()->create([
-            'name' => 'Segunda categoría'
-        ]);
-
-        $firstSubcategory = Subcategory::factory()->create([
-            'name' => 'Primera subcategoría',
-            'category_id' => $firstCategory->id
-        ]);
-
-        $secondSubcategory = Subcategory::factory()->create([
-            'name' => 'Segunda subcategoría',
-            'category_id' => $secondCategory->id
-        ]);
+        $firstSubcategory = $this->createSubcategory($firstCategory->id);
+        $secondSubcategory = $this->createSubcategory($secondCategory->id);
 
         $this->browse(function (Browser $browser) use ($firstCategory, $firstSubcategory, $secondSubcategory) {
             $browser->visit('/')
@@ -67,7 +80,7 @@ class CategoryTest extends DuskTestCase
     /** @test */
     public function it_shows_unlogged_user_options_when_an_unlogged_user_clicks_the_account_icon()
     {
-        Category::factory()->create();
+        $this->createCategory();
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
@@ -85,7 +98,7 @@ class CategoryTest extends DuskTestCase
     /** @test */
     public function it_shows_authenticated_user_options_when_a_logged_user_clicks_the_account_icon()
     {
-        Category::factory()->create();
+        $this->createCategory();
 
         $user = User::factory()->create();
 
