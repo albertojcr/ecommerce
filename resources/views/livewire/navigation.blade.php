@@ -22,7 +22,7 @@
                     <x-jet-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                <img dusk="user-btn" class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             </button>
                         </x-slot>
 
@@ -54,7 +54,7 @@
                 @else
                     <x-jet-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <i class="fas fa-user-circle text-white text-3xl cursor-pointer"></i>
+                            <i dusk="user-btn" class="fas fa-user-circle text-white text-3xl cursor-pointer"></i>
                         </x-slot>
 
                         <x-slot name="content">
@@ -128,6 +128,7 @@
 
                 @auth
                     <a href="{{ route('profile.show') }}"
+                       dusk="show-profile"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
                             <span class="flex justify-center w-9">
                                 <i class="far fa-address-card"></i>
@@ -135,6 +136,7 @@
                         Perfil
                     </a>
                     <a href=""
+                       dusk="logout"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit()"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
                             <span class="flex justify-center w-9">
@@ -146,13 +148,16 @@
                         @csrf
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
+                    <a href="{{ route('login') }}"
+                       dusk="login"
+                       class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
                         <span class="flex justify-center w-9">
                             <i class="fas fa-user-circle"></i>
                         </span>
                         Iniciar sesión
                     </a>
                     <a href="{{ route('register') }}"
+                       dusk="register"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
                         <span class="flex justify-center w-9">
                             <i class="fas fa-fingerprint"></i>

@@ -4,7 +4,7 @@ namespace Tests\Browser;
 
 use App\Models\Category;
 use App\Models\Subcategory;
-use Database\Seeders\UserSeeder;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
@@ -12,15 +12,6 @@ use Tests\DuskTestCase;
 class CategoryTest extends DuskTestCase
 {
     use DatabaseMigrations;
-
-    // Para que ejecute seeders antes de cada prueba
-    // No es práctico, tarda mucho
-/*    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->artisan('db:seed');
-    }*/
 
     /** @test */
     public function it_shows_the_categories_when_clicking_the_categories_button()
@@ -74,61 +65,41 @@ class CategoryTest extends DuskTestCase
     }
 
     /** @test */
-    public function it_shows_the_tv_subcategories_when_hovering_its_button()
+    public function it_shows_unlogged_user_options_when_an_unlogged_user_clicks_the_account_icon()
     {
+        Category::factory()->create();
+
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                ->click('@categories-button')
-                ->mouseover('@category-2')
-                ->assertSee('TV y audio')
-                ->assertSee('Audios')
-                ->assertSee('Audio para autos')
-                ->screenshot('tv-subcategories');
+                ->assertGuest()
+                ->click('@user-btn')
+                ->waitForText('Iniciar sesión')
+                ->waitForText('Registrarse')
+                ->assertDontSee('Administrar cuenta')
+                ->assertDontSee('Perfil')
+                ->assertDontSee('Finalizar sesión')
+                ->screenshot('unlogged-user');
         });
     }
 
     /** @test */
-    public function it_shows_the_consola_subcategories_when_hovering_its_button()
+    public function it_shows_authenticated_user_options_when_a_logged_user_clicks_the_account_icon()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                ->click('@categories-button')
-                ->mouseover('@category-3')
-                ->assertSee('Xbox')
-                ->assertSee('Play Station')
-                ->assertSee('Videojuegos para PC')
-                ->assertSee('Nintendo')
-                ->screenshot('consola-subcategories');
+        Category::factory()->create();
+
+        $user = User::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit('/')
+                ->click('@user-btn')
+                ->waitForText('Administrar cuenta')
+                ->waitForText('Perfil')
+                ->waitForText('Finalizar sesión')
+                ->assertDontSee('Iniciar sesión')
+                ->assertDontSee('Registrarse')
+                ->screenshot('logged-user');
         });
     }
 
-    /** @test */
-    public function it_shows_the_computacion_subcategories_when_hovering_its_button()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                ->click('@categories-button')
-                ->mouseover('@category-4')
-                ->assertSee('Portátiles')
-                ->assertSee('PC escritorio')
-                ->assertSee('Almacenamiento')
-                ->assertSee('Accesorios computadoras')
-                ->screenshot('computacion-subcategories');
-        });
-    }
-
-    /** @test */
-    public function it_shows_the_moda_subcategories_when_hovering_its_button()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                ->click('@categories-button')
-                ->mouseover('@category-5')
-                ->assertSee('Mujeres')
-                ->assertSee('Hombres')
-                ->assertSee('Lentes')
-                ->assertSee('Relojes')
-                ->screenshot('moda-subcategories');
-        });
-    }
 }
