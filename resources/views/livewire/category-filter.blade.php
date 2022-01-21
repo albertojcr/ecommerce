@@ -17,7 +17,8 @@
             <ul class="divide-y divide-gray-200">
                 @foreach($category->subcategories as $subcategory)
                     <li class="py-2 my-2 text-sm ">
-                        <a class="cursor-pointer hover:text-orange-500 capitalize {{ $subcategoria == $subcategory->name ? 'text-orange-500 font-semibold' : '' }}"
+                        <a dusk="filter-subcategory-{{ $subcategory->id }}"
+                           class="cursor-pointer hover:text-orange-500 capitalize {{ $subcategoria == $subcategory->name ? 'text-orange-500 font-semibold' : '' }}"
                            wire:click="$set('subcategoria', '{{ $subcategory->name }}')">
                             {{ $subcategory->name }}
                         </a>
@@ -30,7 +31,8 @@
             <ul class="divide-y divide-gray-200">
                 @foreach($category->brands as $brand)
                     <li class="py-2 my-2 text-sm ">
-                        <a class="cursor-pointer hover:text-orange-500 capitalize {{ $marca == $brand->name ? 'text-orange-500 font-semibold' : ''}}"
+                        <a dusk="filter-brand-{{ $brand->id }}"
+                           class="cursor-pointer hover:text-orange-500 capitalize {{ $marca == $brand->name ? 'text-orange-500 font-semibold' : ''}}"
                            wire:click="$set('marca', '{{ $brand->name }}')">
                             {{ $brand->name }}
                         </a>
