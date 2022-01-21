@@ -15,14 +15,15 @@ class ProductTest extends DuskTestCase
     /** @test */
     public function the_welcome_view_shows_at_least_five_products()
     {
-        $categoryA = $this->createCategory();
-        $subcategoryA = $this->createSubcategory($categoryA->id);
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
 
-        $productA = $this->createProduct($subcategoryA->id);
-        $productB = $this->createProduct($subcategoryA->id);
-        $productC = $this->createProduct($subcategoryA->id);
-        $productD = $this->createProduct($subcategoryA->id);
-        $productE = $this->createProduct($subcategoryA->id);
+        $productA = $this->createProduct($subcategory->id, $brand->id);
+        $productB = $this->createProduct($subcategory->id, $brand->id);
+        $productC = $this->createProduct($subcategory->id, $brand->id);
+        $productD = $this->createProduct($subcategory->id, $brand->id);
+        $productE = $this->createProduct($subcategory->id, $brand->id);
 
         $this->browse(function (Browser $browser) use ($productA, $productB, $productC, $productD, $productE) {
             $browser->visit('/')
@@ -38,21 +39,22 @@ class ProductTest extends DuskTestCase
     /** @test */
     public function the_welcome_view_only_shows_published_products()
     {
-        $categoryA = $this->createCategory();
-        $subcategoryA = $this->createSubcategory($categoryA->id);
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
 
-        $productA = $this->createProduct($subcategoryA->id);
-        $productB = $this->createProduct($subcategoryA->id);
-        $productC = $this->createProduct($subcategoryA->id);
-        $productD = $this->createProduct($subcategoryA->id);
-        $productE = $this->createProduct($subcategoryA->id);
+        $productA = $this->createProduct($subcategory->id, $brand->id);
+        $productB = $this->createProduct($subcategory->id, $brand->id);
+        $productC = $this->createProduct($subcategory->id, $brand->id);
+        $productD = $this->createProduct($subcategory->id, $brand->id);
+        $productE = $this->createProduct($subcategory->id, $brand->id);
 
-        $unpublishedProductA = $this->createProduct($subcategoryA->id, Product::BORRADOR);
-        $unpublishedProductB = $this->createProduct($subcategoryA->id, Product::BORRADOR);
+        $unpublishedProductA = $this->createProduct($subcategory->id, $brand->id, Product::BORRADOR);
+        $unpublishedProductB = $this->createProduct($subcategory->id, $brand->id, Product::BORRADOR);
 
         $this->browse(function (Browser $browser) use ($productA, $productB, $productC, $productD, $productE, $unpublishedProductA, $unpublishedProductB) {
             $browser->visit('/')
-                ->assertSee(Str::limit($productA->name, 20))
+                ->waitForText(Str::limit($productA->name, 20))
                 ->assertSee(Str::limit($productB->name, 20))
                 ->assertSee(Str::limit($productC->name, 20))
                 ->assertSee(Str::limit($productD->name, 20))
