@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Subcategory;
 use Faker\Factory;
@@ -20,28 +21,35 @@ trait TestHelpers
     protected function createSubcategory($categoryId, $hasColor = false)
     {
         return Subcategory::factory()->create([
-            'color' => $hasColor,
-            'category_id' => $categoryId
+            'category_id' => $categoryId,
+            'color' => $hasColor
         ]);
     }
 
     protected function createColor()
     {
         return Color::create([
-            'name' => Factory::create()->colorName()
+            'name' => Factory::create()->colorName() // Duda
         ]);
     }
 
-    protected function createProduct($hasColor = false, $status = Product::PUBLICADO)
+    protected function createImage($imageableId, $imageableType)
     {
-        $category = $this->createCategory();
-        $subcategory = $this->createSubcategory($category->id, $hasColor);
+        return Image::factory()->create([
+            'imageable_id' => $imageableId,
+            'imageable_type' => $imageableType
+        ]);
+    }
+
+    protected function createProduct($subcategoryId, $hasColor = false, $status = Product::PUBLICADO)
+    {
         $brand = Brand::factory()->create();
-        $category->brands()->attach($brand);
-        //$name = Factory::create()->sentence(2); // Duda
+
+        $subcategory = Subcategory::find($subcategoryId);
+        $subcategory->category->brands()->attach($brand);
 
         $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
+            'subcategory_id' => $subcategoryId,
             'brand_id' => $brand->id,
             'quantity' => $subcategory->color ? null : 15,
             'status' => $status
@@ -54,6 +62,9 @@ trait TestHelpers
             ]);
         }
 
+        $this->createImage($product->id, Product::class);
+
         return $product;
     }
+
 }
