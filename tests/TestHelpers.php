@@ -41,16 +41,22 @@ trait TestHelpers
         ]);
     }
 
-    protected function createProduct($subcategoryId, $status = Product::PUBLICADO, $hasColor = false)
+    protected function createBrand($categoryId)
     {
         $brand = Brand::factory()->create();
+        $category = Category::find($categoryId);
+        $category->brands()->attach($brand);
 
+        return $brand;
+    }
+
+    protected function createProduct($subcategoryId, $brandId, $status = Product::PUBLICADO, $hasColor = false)
+    {
         $subcategory = Subcategory::find($subcategoryId);
-        $subcategory->category->brands()->attach($brand);
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategoryId,
-            'brand_id' => $brand->id,
+            'brand_id' => $brandId,
             'quantity' => $subcategory->color ? null : 15,
             'status' => $status
         ]);
