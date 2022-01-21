@@ -120,4 +120,24 @@ class ProductTest extends DuskTestCase
                 ->screenshot('filter-products-by-brand');
         });
     }
+
+    /** @test */
+    public function it_shows_the_details_view_of_a_product()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($category, $subcategory, $product) {
+            $browser->visit('/')
+                ->click('@show-category-' . $category->id)
+                ->click('@view-product-' . $product->id)
+                ->assertUrlIs(route('products.show', $product))
+                ->assertSee($product->name)
+                ->assertSee(Str::title($product->brand->name))
+                ->assertSee($product->price)
+                ->screenshot('show-product-details');
+        });
+    }
 }
