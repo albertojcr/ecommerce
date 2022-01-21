@@ -37,10 +37,12 @@ trait TestHelpers
         $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id, $hasColor);
         $brand = Brand::factory()->create();
-        $name = Factory::create()->sentence(2); // Duda
+        $category->brands()->attach($brand);
+        //$name = Factory::create()->sentence(2); // Duda
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
             'quantity' => $subcategory->color ? null : 15,
             'status' => $status
         ]);
