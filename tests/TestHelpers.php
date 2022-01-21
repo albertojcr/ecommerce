@@ -41,7 +41,7 @@ trait TestHelpers
         ]);
     }
 
-    protected function createProduct($subcategoryId, $hasColor = false, $status = Product::PUBLICADO)
+    protected function createProduct($subcategoryId, $status = Product::PUBLICADO, $hasColor = false)
     {
         $brand = Brand::factory()->create();
 
