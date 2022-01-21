@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
@@ -50,6 +51,32 @@ class CategoryTest extends DuskTestCase
         });
     }
 
+    /** @test */
+    public function it_shows_the_detailed_view_of_a_category()
+    {
+        $category = $this->createCategory();
 
+        $subcategoryA = $this->createSubcategory($category->id);
+        $subcategoryB = $this->createSubcategory($category->id);
+
+        $brandA = $this->createBrand($category->id);
+        $brandB = $this->createBrand($category->id);
+
+        $productA = $this->createProduct($subcategoryA->id, $brandA->id);
+        $productB = $this->createProduct($subcategoryB->id, $brandB->id);
+
+        $this->browse(function (Browser $browser) use ($category, $subcategoryA, $subcategoryB, $brandA, $brandB, $productA, $productB) {
+            $browser->visit('/')
+                ->click('@show-category-' . $category->id)
+                ->assertSee(Str::title($subcategoryA->name))
+                ->assertSee(Str::title($subcategoryB->name))
+                ->assertSee(Str::title($brandA->name))
+                ->assertSee(Str::title($brandB->name))
+                ->assertSee(Str::limit($productA->name, 20))
+                ->assertSee(Str::limit($productB->name, 20))
+                ->screenshot('show-detailed-category-view');
+
+        });
+    }
 
 }
