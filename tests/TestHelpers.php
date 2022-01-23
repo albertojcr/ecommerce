@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Size;
 use App\Models\Subcategory;
 use Faker\Factory;
 use Illuminate\Support\Str;
@@ -18,11 +19,12 @@ trait TestHelpers
         return Category::factory()->create();
     }
 
-    protected function createSubcategory($categoryId, $hasColor = false)
+    protected function createSubcategory($categoryId, $hasColor = false, $hasSize = false)
     {
         return Subcategory::factory()->create([
             'category_id' => $categoryId,
-            'color' => $hasColor
+            'color' => $hasColor,
+            'size' => $hasSize
         ]);
     }
 
@@ -35,7 +37,7 @@ trait TestHelpers
 
     protected function createImage($imageableId, $imageableType)
     {
-        return Image::factory()->create([
+        return Image::factory(4)->create([
             'imageable_id' => $imageableId,
             'imageable_type' => $imageableType
         ]);
@@ -50,7 +52,24 @@ trait TestHelpers
         return $brand;
     }
 
-    protected function createProduct($subcategoryId, $brandId, $status = Product::PUBLICADO, $hasColor = false)
+    protected function createSize($productId, $colors)
+    {
+        $product = Product::find($productId);
+        $size = Size::factory()->create([
+            'product_id' => $productId
+        ]);
+
+        foreach ($colors as $color) {
+            $size->colors()
+                ->attach([
+                    $color->id => ['quantity' => 12]
+                ]);
+        }
+
+        return $size;
+    }
+
+    protected function createProduct($subcategoryId, $brandId, $status = Product::PUBLICADO, $colors = null)
     {
         $subcategory = Subcategory::find($subcategoryId);
 
@@ -61,11 +80,12 @@ trait TestHelpers
             'status' => $status
         ]);
 
-        if ($hasColor) {
-            $color = $this->createColor();
-            $product->colors()->attach($color, [
-                'quantity' => 5
-            ]);
+        if ($subcategory->color && !$subcategory->size && is_array($colors)) {
+            foreach ($colors as $color) {
+                $product->colors()->attach([
+                    $color->id => ['quantity' => '50']
+                ]);
+            }
         }
 
         $this->createImage($product->id, Product::class);

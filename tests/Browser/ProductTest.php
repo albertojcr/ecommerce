@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\Models\Product;
+use App\Models\Size;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -138,6 +139,114 @@ class ProductTest extends DuskTestCase
                 ->assertSee(Str::title($product->brand->name))
                 ->assertSee($product->price)
                 ->screenshot('show-product-details');
+        });
+    }
+
+    /** @test */
+    public function the_details_view_of_a_product_without_color_and_size_contains_the_necessary_elements()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($category, $subcategory, $product) {
+            $browser->visit('/')
+                ->click('@show-category-' . $category->id)
+                ->click('@view-product-' . $product->id)
+                ->assertUrlIs(route('products.show', $product))
+                ->assertAttribute('@product-image-' . $product->images->find(1)->id, 'src', '/storage/' . $product->images->find(1)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(2)->id, 'src', '/storage/' . $product->images->find(2)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(3)->id, 'src', '/storage/' . $product->images->find(3)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(4)->id, 'src', '/storage/' . $product->images->find(4)->url)
+                //->assertSee($product->description)
+                ->assertSee($product->name)
+                ->assertSee($product->price)
+                ->assertSee('Stock disponible: ' . $product->quantity)
+                ->assertSeeIn('@decrease-quantity-btn', '-')
+                ->assertSeeIn('@increase-quantity-btn', '+')
+                ->assertPresent('@add-to-cart-btn')
+                ->screenshot('show-product-details-without-color-and-size');
+        });
+    }
+
+    /** @test */
+    public function the_details_view_of_a_product_with_color_contains_the_necessary_elements()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $colorA = $this->createColor();
+        $colorB = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($colorA, $colorB));
+
+        $productQuantity = $product->colors->first()->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($category, $subcategory, $product, $productQuantity, $colorA, $colorB) {
+            $browser->visit('/')
+                ->click('@show-category-' . $category->id)
+                ->click('@view-product-' . $product->id)
+                ->assertUrlIs(route('products.show', $product))
+                ->assertAttribute('@product-image-' . $product->images->find(1)->id, 'src', '/storage/' . $product->images->find(1)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(2)->id, 'src', '/storage/' . $product->images->find(2)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(3)->id, 'src', '/storage/' . $product->images->find(3)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(4)->id, 'src', '/storage/' . $product->images->find(4)->url)
+                ->assertSee($product->name)
+                ->assertSee($product->price)
+                ->pause(2000)
+                ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
+                ->select('@color-dropdown', $colorA->id)
+                ->assertSelected('@color-dropdown', $colorA->id)
+                //->assertSee($productQuantity)
+                ->assertSeeIn('@decrease-quantity-btn', '-')
+                ->assertSeeIn('@increase-quantity-btn', '+')
+                ->assertPresent('@add-to-cart-btn')
+                ->screenshot('show-product-details-with-color');
+        });
+    }
+
+    /** @test */
+    public function the_details_view_of_a_product_with_color_and_size_contains_the_necessary_elements()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $colorA = $this->createColor();
+        $colorB = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($colorA, $colorB));
+
+        $sizeA = $this->createSize($product->id, array($colorA, $colorB));
+        $sizeB = $this->createSize($product->id, array($colorA, $colorB));
+
+        $productQuantity = $product->sizes->find($sizeA->id)->colors->find($colorA->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($category, $subcategory, $product, $productQuantity, $colorA, $colorB, $sizeA, $sizeB) {
+            $browser->visit('/')
+                ->click('@show-category-' . $category->id)
+                ->click('@view-product-' . $product->id)
+                ->assertUrlIs(route('products.show', $product))
+                ->assertAttribute('@product-image-' . $product->images->find(1)->id, 'src', '/storage/' . $product->images->find(1)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(2)->id, 'src', '/storage/' . $product->images->find(2)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(3)->id, 'src', '/storage/' . $product->images->find(3)->url)
+                ->assertAttribute('@product-image-' . $product->images->find(4)->id, 'src', '/storage/' . $product->images->find(4)->url)
+                ->assertSee($product->name)
+                ->assertSee($product->price)
+                ->pause(2000)
+                ->assertSelectHasOptions('@size-dropdown', [$sizeA->id, $sizeB->id])
+                ->select('@size-dropdown', $sizeA->id)
+                ->assertSelected('@size-dropdown', $sizeA->id)
+                ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
+                ->select('@color-dropdown', $colorA->id)
+                ->assertSelected('@color-dropdown', $colorA->id)
+                //->assertSee($productQuantity)
+                ->assertSeeIn('@decrease-quantity-btn', '-')
+                ->assertSeeIn('@increase-quantity-btn', '+')
+                ->assertPresent('@add-to-cart-btn')
+                ->screenshot('show-product-details-with-color-and-size');
         });
     }
 }
