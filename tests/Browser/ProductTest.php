@@ -249,4 +249,47 @@ class ProductTest extends DuskTestCase
                 ->screenshot('show-product-details-with-color-and-size');
         });
     }
+
+    /** @test */
+    public function the_decrease_quantity_button_in_the_details_view_has_a_limit()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visit(route('products.show', $product))
+                ->assertSeeIn('@product-quantity', '1')
+                ->assertButtonDisabled('@decrease-quantity-btn')
+                ->press('@decrease-quantity-btn')
+                ->assertSeeIn('@product-quantity', '1')
+                ->assertButtonDisabled('@decrease-quantity-btn')
+                ->screenshot('decrease-product-qty-button-limit');
+        });
+    }
+
+    /** @test */
+    public function the_increase_quantity_button_in_the_details_view_has_a_limit()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visit(route('products.show', $product))
+                ->assertSeeIn('@product-quantity', '1')
+                ->assertButtonEnabled('@increase-quantity-btn');
+
+            for ($i = 1; $i < $product->quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                ->pause(500);
+            }
+
+            $browser->assertSeeIn('@product-quantity', $product->quantity)
+                ->assertButtonDisabled('@increase-quantity-btn')
+                ->screenshot('increase-product-qty-button-limit');
+        });
+    }
 }
