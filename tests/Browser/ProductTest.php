@@ -292,4 +292,63 @@ class ProductTest extends DuskTestCase
                 ->screenshot('increase-product-qty-button-limit');
         });
     }
+
+    /** @test */
+    public function it_doesnt_show_size_nor_color_dropdowns_in_the_details_view_when_the_product_doesnt_have_these_features()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->assertNotPresent('@size-dropdown')
+                ->assertNotPresent('@color-dropdown')
+                ->screenshot('doesnt-show-dropdowns-for-simple-product');
+        });
+    }
+
+    /** @test */
+    public function it_only_shows_the_color_dropdown_in_the_details_view_when_the_product_only_have_this_feature()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $colorA = $this->createColor();
+        $colorB = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($colorA, $colorB));
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->assertNotPresent('@size-dropdown')
+                ->assertPresent('@color-dropdown')
+                ->screenshot('only-show-color-dropdown-when-product-only-has-color');
+        });
+    }
+
+    /** @test */
+    public function it_shows_size_and_color_dropdowns_in_the_details_view_when_the_product_doesnt_have_both_features()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $colorA = $this->createColor();
+        $colorB = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($colorA, $colorB));
+
+        $this->createSize($product->id, array($colorA, $colorB));
+        $this->createSize($product->id, array($colorA, $colorB));
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->assertPresent('@size-dropdown')
+                ->assertPresent('@color-dropdown')
+                ->screenshot('show-color-and-size-dropdowns-when-product-have-them');
+        });
+    }
 }
