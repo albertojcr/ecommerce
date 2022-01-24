@@ -19,7 +19,11 @@
         </select>
     </div>
 
-    <div class="flex mt-4">
+    <p class="text-gray-700 my-4">
+        <span class="font-semibold text-lg">Stock disponible:</span> {{ $product->stock }}
+    </p>
+
+    <div class="flex">
         <div class="mr-4">
             <x-jet-secondary-button
                 dusk="decrease-quantity-btn"
@@ -43,6 +47,7 @@
         <div class="flex-1">
             <x-button
                 dusk="add-to-cart-btn"
+                x-bind:disabled="$wire.qty > $wire.quantity"
                 x-bind:disabled="!$wire.quantity"
                 wire:click="addItem"
                 wire:loading.attr="disabled"

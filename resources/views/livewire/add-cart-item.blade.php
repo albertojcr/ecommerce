@@ -25,6 +25,7 @@
         </div>
         <div class="flex-1">
             <x-button dusk="add-to-cart-btn"
+                      x-bind:disabled="$wire.qty > $wire.quantity"
                       wire:click="addItem"
                       wire:loading.attr="disabled"
                       wire:target="addItem"
