@@ -3,7 +3,7 @@
     <select dusk="color-dropdown" wire:model="color_id" class="form-control w-full">
         <option value="" selected disabled>Seleccionar un color</option>
         @foreach ($colors as $color)
-            <option value="{{$color->id}}">{{ $color->name }}</option>
+            <option value="{{$color->id}}">{{ __(ucfirst($color->name)) }}</option>
         @endforeach
     </select>
 
@@ -29,7 +29,14 @@
             </x-jet-secondary-button>
         </div>
         <div class="flex-1">
-            <x-button dusk="add-to-cart-btn" x-bind:disabled="!$wire.quantity" class="w-full" color="orange">
+            <x-button
+                dusk="add-to-cart-btn"
+                x-bind:disabled="!$wire.quantity"
+                wire:click="addItem"
+                wire:loading.attr="disabled"
+                wire:target="addItem"
+                class="w-full"
+                color="orange">
                 Agregar al carrito de compras
             </x-button>
         </div>
