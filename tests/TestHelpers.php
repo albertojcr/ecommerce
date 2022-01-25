@@ -54,7 +54,6 @@ trait TestHelpers
 
     protected function createSize($productId, $colors)
     {
-        $product = Product::find($productId);
         $size = Size::factory()->create([
             'product_id' => $productId
         ]);
