@@ -284,7 +284,7 @@ class ProductTest extends DuskTestCase
 
             for ($i = 1; $i < $product->quantity; $i++) {
                 $browser->press('@increase-quantity-btn')
-                ->pause(500);
+                    ->pause(500);
             }
 
             $browser->assertSeeIn('@product-quantity', $product->quantity)
@@ -349,6 +349,77 @@ class ProductTest extends DuskTestCase
                 ->assertPresent('@size-dropdown')
                 ->assertPresent('@color-dropdown')
                 ->screenshot('show-color-and-size-dropdowns-when-product-have-them');
+        });
+    }
+
+    /** @test */
+    public function it_adds_a_product_without_color_and_size_to_the_shoping_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', '1')
+                ->screenshot('product/adds-simple-product-to-cart');
+        });
+    }
+
+    /** @test */
+    public function it_adds_a_product_with_only_color_to_the_shoping_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $colorA = $this->createColor();
+        $colorB = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($colorA, $colorB));
+
+        $this->browse(function (Browser $browser) use ($product, $colorA, $colorB) {
+            $browser->visitRoute('products.show', $product)
+                ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
+                ->select('@color-dropdown', $colorA->id)
+                ->assertSelected('@color-dropdown', $colorA->id)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', '1')
+                ->screenshot('product/adds-product-with-color-to-cart');
+        });
+    }
+
+    /** @test */
+    public function it_adds_a_product_with_color_and_size_to_the_shoping_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $size = $this->createSize($product->id, array($color));
+
+        $this->browse(function (Browser $browser) use ($product, $color, $size) {
+            $browser->visitRoute('products.show', $product)
+                ->pause(1000)
+                ->assertSelectHasOptions('@size-dropdown', [$size->id])
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->assertSelectHasOptions('@color-dropdown', [$color->id])
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', '1')
+                ->screenshot('product/adds-product-with-color-and-size-to-cart');
         });
     }
 }
