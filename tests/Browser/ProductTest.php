@@ -422,4 +422,25 @@ class ProductTest extends DuskTestCase
                 ->screenshot('product/adds-product-with-color-and-size-to-cart');
         });
     }
+
+    /** @test */
+    public function it_shows_the_products_in_the_cart_when_clicking_its_icon()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                //->waitForTextIn('@cart-products-count-icon', '1')
+                ->click('@cart-icon')
+                ->assertSeeIn('@cart-content', $product->name)
+                ->screenshot('product/show-cart-content');
+        });
+    }
+
 }
