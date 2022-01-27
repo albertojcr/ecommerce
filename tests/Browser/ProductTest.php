@@ -430,15 +430,20 @@ class ProductTest extends DuskTestCase
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
-        $product = $this->createProduct($subcategory->id, $brand->id);
+        $productA = $this->createProduct($subcategory->id, $brand->id);
+        $productB = $this->createProduct($subcategory->id, $brand->id);
 
-        $this->browse(function (Browser $browser) use ($product) {
-            $browser->visitRoute('products.show', $product)
+        $this->browse(function (Browser $browser) use ($productA, $productB) {
+            $browser->visitRoute('products.show', $productA)
                 ->assertButtonEnabled('@add-to-cart-btn')
                 ->press('@add-to-cart-btn')
-                //->waitForTextIn('@cart-products-count-icon', '1')
+                ->visitRoute('products.show', $productB)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
                 ->click('@cart-icon')
-                ->assertSeeIn('@cart-content', $product->name)
+                ->pause(1000)
+                ->assertSeeIn('@cart-content', $productA->name)
+                ->assertSeeIn('@cart-content', $productB->name)
                 ->screenshot('product/show-cart-content');
         });
     }
