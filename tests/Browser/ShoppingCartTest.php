@@ -126,4 +126,25 @@ class ShoppingCartTest extends DuskTestCase
                 ->screenshot('shopping-cart/cart-count-increments');
         });
     }
+
+    /** @test */
+    public function can_not_add_more_quantity_of_a_aimple_product_than_stock_exists_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->screenshot('cannot-add-more-qty-than-stock');
+
+            for ($i = 1; $i < $product->quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                    ->pause(500);
+            }
+
+        });
+    }
 }
