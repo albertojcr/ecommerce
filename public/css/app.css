@@ -1037,6 +1037,12 @@ select {
 .top-20 {
   top: 5rem;
 }
+.right-2 {
+  right: 0.5rem;
+}
+.top-2 {
+  top: 0.5rem;
+}
 .z-0 {
   z-index: 0;
 }
@@ -1189,6 +1195,9 @@ select {
 .mt-0 {
   margin-top: 0px;
 }
+.mr-6 {
+  margin-right: 1.5rem;
+}
 .block {
   display: block;
 }
@@ -1314,6 +1323,9 @@ select {
 }
 .w-56 {
   width: 14rem;
+}
+.w-32 {
+  width: 8rem;
 }
 .min-w-0 {
   min-width: 0px;
