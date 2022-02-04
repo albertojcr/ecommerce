@@ -4,44 +4,42 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Color;
 use Livewire\Component;
-use App\Models\ColorProduct as TbPivot;
+use App\Models\ColorSize as TbPivot;
 
-class ColorProduct extends Component
+class ColorSize extends Component
 {
-    public $product, $colors;
+    public $size, $colors;
     public $color_id, $quantity;
+    public $pivot, $open = false, $pivot_color_id, $pivot_quantity;
 
-    public $open = false;
-
-    public $pivot, $pivot_color_id, $pivot_quantity;
+    protected $listeners = ['delete'];
 
     protected $rules = [
         'color_id' => 'required',
         'quantity' => 'required|numeric'
     ];
 
-    protected $listeners = ['delete'];
-
     public function mount()
     {
         $this->colors = Color::all();
     }
 
-    public function save(){
+    public function save()
+    {
         $this->validate();
 
         $pivot = TbPivot::where('color_id', $this->color_id)
-            ->where('product_id', $this->product->id)
+            ->where('size_id', $this->size->id)
             ->first();
 
         if ($pivot) {
             $pivot->quantity += $this->quantity;
             $pivot->save();
         } else {
-            $this->product->colors()->attach([
+            $this->size->colors()->attach([
                 $this->color_id => [
-                    'quantity' => $this->quantity
-                ]
+                    'quantity' => $this->quantity,
+                ],
             ]);
         }
 
@@ -49,14 +47,14 @@ class ColorProduct extends Component
 
         $this->emit('saved');
 
-        $this->product = $this->product->fresh();
+        $this->size = $this->size->fresh();
     }
 
     public function edit(TbPivot $pivot)
     {
-        $this->open = true;
-
         $this->pivot = $pivot;
+
+        $this->open = true;
 
         $this->pivot_color_id = $pivot->color_id;
 
@@ -70,7 +68,7 @@ class ColorProduct extends Component
 
         $this->pivot->save();
 
-        $this->product = $this->product->fresh();
+        $this->size = $this->size->fresh();
 
         $this->open = false;
     }
@@ -78,14 +76,13 @@ class ColorProduct extends Component
     public function delete(TbPivot $pivot)
     {
         $pivot->delete();
-
-        $this->product = $this->product->fresh();
+        $this->size = $this->size->fresh();
     }
 
     public function render()
     {
-        $productColors = $this->product->colors;
+        $sizeColors = $this->size->colors;
 
-        return view('livewire.admin.color-product', compact('productColors'));
+        return view('livewire.admin.color-size', compact('sizeColors'));
     }
 }
