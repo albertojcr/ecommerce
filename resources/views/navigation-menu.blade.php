@@ -27,6 +27,10 @@
                     <x-jet-nav-link href="{{ route('admin.orders.index') }}" :active="request()->routeIs('admin.orders.*')">
                         Pedidos
                     </x-jet-nav-link>
+
+                    <x-jet-nav-link href="{{ route('admin.departments.index') }}" :active="request()->routeIs('admin.departments.*')">
+                        Departamentos
+                    </x-jet-nav-link>
                 </div>
             </div>
 
@@ -79,9 +83,9 @@
                             </x-slot>
                         </x-jet-dropdown>
                     </div>
-                @endif
+            @endif
 
-                <!-- Settings Dropdown -->
+            <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
                     <x-jet-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -125,7 +129,7 @@
                                 @csrf
 
                                 <x-jet-dropdown-link href="{{ route('logout') }}"
-                                         onclick="event.preventDefault();
+                                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-jet-dropdown-link>
@@ -165,6 +169,10 @@
             <x-jet-responsive-nav-link href="{{ route('admin.orders.index') }}" :active="request()->routeIs('admin.orders.*')">
                 Pedidos
             </x-jet-responsive-nav-link>
+
+            <x-jet-responsive-nav-link href="{{ route('admin.departments.index') }}" :active="request()->routeIs('admin.departments.*')">
+                Departamentos
+            </x-jet-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -194,12 +202,12 @@
                     </x-jet-responsive-nav-link>
                 @endif
 
-                <!-- Authentication -->
+            <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
                     <x-jet-responsive-nav-link href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
+                                               onclick="event.preventDefault();
                                     this.closest('form').submit();">
                         {{ __('Log Out') }}
                     </x-jet-responsive-nav-link>
