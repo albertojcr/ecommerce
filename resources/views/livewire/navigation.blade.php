@@ -40,9 +40,11 @@
                                 {{ __('My Orders') }}
                             </x-jet-dropdown-link>
 
-                            <x-jet-dropdown-link href="{{ route('admin.index') }}">
-                                {{ __('Admin') }}
-                            </x-jet-dropdown-link>
+                            @role('admin')
+                                <x-jet-dropdown-link href="{{ route('admin.index') }}">
+                                    {{ __('Admin') }}
+                                </x-jet-dropdown-link>
+                            @endrole
 
                             <div class="border-t border-gray-100"></div>
 
@@ -52,7 +54,7 @@
 
                                 <x-jet-dropdown-link href="{{ route('logout') }}"
                                                      onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                    this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-jet-dropdown-link>
                             </form>
@@ -95,9 +97,9 @@
                             <li class="navigation-link text-trueGray-500 hover:bg-orange-500 hover:text-white">
                                 <a dusk="category-{{ $category->id }}" href="{{ route('categories.show', $category) }}" class="py-2 px-4 text-sm flex items-center">
 
-                                    <span class="flex justify-center w-9">
-                                        {!! $category->icon !!}
-                                    </span>
+        <span class="flex justify-center w-9">
+            {!! $category->icon !!}
+        </span>
                                     {{ $category->name }}
                                 </a>
                                 <div class="navigation-submenu bg-gray-100 absolute w-3/4 h-full top-0 right-0 hidden">
@@ -121,9 +123,9 @@
                     @foreach($categories as $category)
                         <li class="text-trueGray-500 hover:bg-orange-500 hover:text-white">
                             <a href="{{ route('categories.show', $category) }}" class="py-2 px-4 text-sm flex items-center">
-                                <span class="flex justify-center w-9">
-                                    {!! $category->icon !!}
-                                </span>
+    <span class="flex justify-center w-9">
+        {!! $category->icon !!}
+    </span>
                                 {{ $category->name }}
                             </a>
                         </li>
@@ -138,18 +140,18 @@
                     <a href="{{ route('profile.show') }}"
                        dusk="show-profile"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
-                            <span class="flex justify-center w-9">
-                                <i class="far fa-address-card"></i>
-                            </span>
+<span class="flex justify-center w-9">
+    <i class="far fa-address-card"></i>
+</span>
                         Perfil
                     </a>
                     <a href=""
                        dusk="logout"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit()"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
-                            <span class="flex justify-center w-9">
-                            <i class="fas fa-sign-out-alt"></i>
-                            </span>
+<span class="flex justify-center w-9">
+<i class="fas fa-sign-out-alt"></i>
+</span>
                         Cerrar sesión
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
@@ -159,17 +161,17 @@
                     <a href="{{ route('login') }}"
                        dusk="login"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
-                        <span class="flex justify-center w-9">
-                            <i class="fas fa-user-circle"></i>
-                        </span>
+<span class="flex justify-center w-9">
+<i class="fas fa-user-circle"></i>
+</span>
                         Iniciar sesión
                     </a>
                     <a href="{{ route('register') }}"
                        dusk="register"
                        class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
-                        <span class="flex justify-center w-9">
-                            <i class="fas fa-fingerprint"></i>
-                        </span>
+<span class="flex justify-center w-9">
+<i class="fas fa-fingerprint"></i>
+</span>
                         Registrar
                     </a>
                 @endauth
