@@ -163,4 +163,54 @@ class ShoppingCartTest extends DuskTestCase
                 ->screenshot('shopping-cart/change-size-product-quantity-and-total-updates');
         });
     }
+
+    /** @test */
+    public function it_can_remove_an_item_from_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $productA = $this->createProduct($subcategory->id, $brand->id);
+        $productB = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($productA, $productB) {
+            $browser->visitRoute('products.show', $productA)
+                ->press('@add-to-cart-btn')
+                ->visitRoute('products.show', $productB)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('shopping-cart')
+                ->assertSee($productA->name)
+                ->assertSee($productB->name)
+                ->press('@remove-product-' . $productB->id)
+                ->pause(1000)
+                ->assertSee($productA->name)
+                ->assertDontSee($productB->name)
+                ->screenshot('shopping-cart/can-remove-an-item-from-cart');
+        });
+    }
+
+    /** @test */
+    public function it_can_clear_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('shopping-cart')
+                ->assertSee($product->name)
+                ->press('@clear-cart')
+                ->pause(1000)
+                ->assertDontSee($product->name)
+                ->assertSee('TU CARRITO DE COMPRAS ESTÁ VACÍO')
+                ->screenshot('shopping-cart/can-clear-the-cart');
+        });
+    }
 }
