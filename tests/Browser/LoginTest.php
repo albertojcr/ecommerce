@@ -25,7 +25,7 @@ class LoginTest extends DuskTestCase
                 ->assertDontSee('Administrar cuenta')
                 ->assertDontSee('Perfil')
                 ->assertDontSee('Finalizar sesión')
-                ->screenshot('unlogged-user');
+                ->screenshot('login/show-unlogged-user-options');
         });
     }
 
@@ -45,7 +45,7 @@ class LoginTest extends DuskTestCase
                 ->waitForText('Finalizar sesión')
                 ->assertDontSee('Iniciar sesión')
                 ->assertDontSee('Registrarse')
-                ->screenshot('logged-user');
+                ->screenshot('login/show-logged-user-options');
         });
     }
 }

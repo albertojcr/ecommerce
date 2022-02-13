@@ -2,11 +2,6 @@
 
 namespace Tests\Browser;
 
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Subcategory;
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -28,7 +23,7 @@ class CategoryTest extends DuskTestCase
                 ->click('@categories-button')
                 ->waitForText($firstCategory->name)
                 ->assertSee($secondCategory->name)
-                ->screenshot('show-categories');
+                ->screenshot('category/show-categories');
         });
     }
 
@@ -47,7 +42,7 @@ class CategoryTest extends DuskTestCase
                 ->mouseover('@category-' . $firstCategory->id)
                 ->waitForText($firstSubcategory->name)
                 ->assertDontSee($secondSubcategory->name)
-                ->screenshot('show-subcategories');
+                ->screenshot('category/show-subcategories');
         });
     }
 
@@ -74,7 +69,7 @@ class CategoryTest extends DuskTestCase
                 ->assertSee(Str::title($brandB->name))
                 ->assertSee(Str::limit($productA->name, 20))
                 ->assertSee(Str::limit($productB->name, 20))
-                ->screenshot('show-detailed-category-view');
+                ->screenshot('category/show-detailed-category-view');
 
         });
     }

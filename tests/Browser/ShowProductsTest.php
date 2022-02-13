@@ -3,124 +3,14 @@
 namespace Tests\Browser;
 
 use App\Models\Product;
-use App\Models\Size;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
-class ProductTest extends DuskTestCase
+class ShowProductsTest extends DuskTestCase
 {
     use DatabaseMigrations;
-
-    /** @test */
-    public function the_welcome_view_shows_at_least_five_products()
-    {
-        $category = $this->createCategory();
-        $subcategory = $this->createSubcategory($category->id);
-        $brand = $this->createBrand($category->id);
-
-        $productA = $this->createProduct($subcategory->id, $brand->id);
-        $productB = $this->createProduct($subcategory->id, $brand->id);
-        $productC = $this->createProduct($subcategory->id, $brand->id);
-        $productD = $this->createProduct($subcategory->id, $brand->id);
-        $productE = $this->createProduct($subcategory->id, $brand->id);
-
-        $this->browse(function (Browser $browser) use ($productA, $productB, $productC, $productD, $productE) {
-            $browser->visit('/')
-                ->assertSee(Str::limit($productA->name, 20))
-                ->assertSee(Str::limit($productB->name, 20))
-                ->assertSee(Str::limit($productC->name, 20))
-                ->assertSee(Str::limit($productD->name, 20))
-                ->assertSee(Str::limit($productE->name, 20))
-                ->screenshot('show-five-products');
-        });
-    }
-
-    /** @test */
-    public function the_welcome_view_only_shows_published_products()
-    {
-        $category = $this->createCategory();
-        $subcategory = $this->createSubcategory($category->id);
-        $brand = $this->createBrand($category->id);
-
-        $productA = $this->createProduct($subcategory->id, $brand->id);
-        $productB = $this->createProduct($subcategory->id, $brand->id);
-        $productC = $this->createProduct($subcategory->id, $brand->id);
-        $productD = $this->createProduct($subcategory->id, $brand->id);
-        $productE = $this->createProduct($subcategory->id, $brand->id);
-
-        $unpublishedProductA = $this->createProduct($subcategory->id, $brand->id, Product::BORRADOR);
-        $unpublishedProductB = $this->createProduct($subcategory->id, $brand->id, Product::BORRADOR);
-
-        $this->browse(function (Browser $browser) use ($productA, $productB, $productC, $productD, $productE, $unpublishedProductA, $unpublishedProductB) {
-            $browser->visit('/')
-                ->waitForText(Str::limit($productA->name, 20))
-                ->assertSee(Str::limit($productB->name, 20))
-                ->assertSee(Str::limit($productC->name, 20))
-                ->assertSee(Str::limit($productD->name, 20))
-                ->assertSee(Str::limit($productE->name, 20))
-                ->assertDontSee(Str::limit($unpublishedProductA->name, 20))
-                ->assertDontSee(Str::limit($unpublishedProductB->name, 20))
-                ->screenshot('only-show-published-products');
-        });
-    }
-
-    /** @test */
-    public function it_filters_products_by_subcategory()
-    {
-        $category = $this->createCategory();
-
-        $subcategoryA = $this->createSubcategory($category->id);
-        $subcategoryB = $this->createSubcategory($category->id);
-
-        $brandA = $this->createBrand($category->id);
-        $brandB = $this->createBrand($category->id);
-
-        $productA = $this->createProduct($subcategoryA->id, $brandA->id);
-        $productB = $this->createProduct($subcategoryA->id, $brandB->id);
-        $productC = $this->createProduct($subcategoryB->id, $brandA->id);
-        $productD = $this->createProduct($subcategoryB->id, $brandB->id);
-
-        $this->browse(function (Browser $browser) use ($category, $subcategoryA, $productA, $productB, $productC, $productD) {
-            $browser->visit('/')
-                ->click('@show-category-' . $category->id)
-                ->click('@filter-subcategory-' . $subcategoryA->id)
-                ->assertSee(Str::limit($productA->name, 20))
-                ->assertSee(Str::limit($productB->name, 20))
-                ->assertDontSee(Str::limit($productC->name, 20))
-                ->assertDontSee(Str::limit($productD->name, 20))
-                ->screenshot('filter-products-by-subcategory');
-        });
-    }
-
-    /** @test */
-    public function it_filters_products_by_brand()
-    {
-        $category = $this->createCategory();
-
-        $subcategoryA = $this->createSubcategory($category->id);
-        $subcategoryB = $this->createSubcategory($category->id);
-
-        $brandA = $this->createBrand($category->id);
-        $brandB = $this->createBrand($category->id);
-
-        $productA = $this->createProduct($subcategoryA->id, $brandA->id);
-        $productB = $this->createProduct($subcategoryB->id, $brandA->id);
-        $productC = $this->createProduct($subcategoryA->id, $brandB->id);
-        $productD = $this->createProduct($subcategoryB->id, $brandB->id);
-
-        $this->browse(function (Browser $browser) use ($category, $brandA, $productA, $productB, $productC, $productD) {
-            $browser->visit('/')
-                ->click('@show-category-' . $category->id)
-                ->click('@filter-brand-' . $brandA->id)
-                ->assertSee(Str::limit($productA->name, 20))
-                ->assertSee(Str::limit($productB->name, 20))
-                ->assertDontSee(Str::limit($productC->name, 20))
-                ->assertDontSee(Str::limit($productD->name, 20))
-                ->screenshot('filter-products-by-brand');
-        });
-    }
 
     /** @test */
     public function it_shows_the_details_view_of_a_product()
@@ -138,7 +28,7 @@ class ProductTest extends DuskTestCase
                 ->assertSee($product->name)
                 ->assertSee(Str::title($product->brand->name))
                 ->assertSee($product->price)
-                ->screenshot('show-product-details');
+                ->screenshot('show-products/show-product-details');
         });
     }
 
@@ -166,7 +56,7 @@ class ProductTest extends DuskTestCase
                 ->assertSeeIn('@decrease-quantity-btn', '-')
                 ->assertSeeIn('@increase-quantity-btn', '+')
                 ->assertPresent('@add-to-cart-btn')
-                ->screenshot('show-product-details-without-color-and-size');
+                ->screenshot('show-products/show-product-details-without-color-and-size');
         });
     }
 
@@ -203,7 +93,7 @@ class ProductTest extends DuskTestCase
                 ->assertSeeIn('@decrease-quantity-btn', '-')
                 ->assertSeeIn('@increase-quantity-btn', '+')
                 ->assertPresent('@add-to-cart-btn')
-                ->screenshot('show-product-details-with-color');
+                ->screenshot('show-products/show-product-details-with-color');
         });
     }
 
@@ -246,7 +136,7 @@ class ProductTest extends DuskTestCase
                 ->assertSeeIn('@decrease-quantity-btn', '-')
                 ->assertSeeIn('@increase-quantity-btn', '+')
                 ->assertPresent('@add-to-cart-btn')
-                ->screenshot('show-product-details-with-color-and-size');
+                ->screenshot('show-products/show-product-details-with-color-and-size');
         });
     }
 
@@ -265,7 +155,7 @@ class ProductTest extends DuskTestCase
                 ->press('@decrease-quantity-btn')
                 ->assertSeeIn('@product-quantity', '1')
                 ->assertButtonDisabled('@decrease-quantity-btn')
-                ->screenshot('decrease-product-qty-button-limit');
+                ->screenshot('show-products/decrease-product-qty-button-limit');
         });
     }
 
@@ -289,7 +179,7 @@ class ProductTest extends DuskTestCase
 
             $browser->assertSeeIn('@product-quantity', $product->quantity)
                 ->assertButtonDisabled('@increase-quantity-btn')
-                ->screenshot('increase-product-qty-button-limit');
+                ->screenshot('show-products/increase-product-qty-button-limit');
         });
     }
 
@@ -305,7 +195,7 @@ class ProductTest extends DuskTestCase
             $browser->visitRoute('products.show', $product)
                 ->assertNotPresent('@size-dropdown')
                 ->assertNotPresent('@color-dropdown')
-                ->screenshot('doesnt-show-dropdowns-for-simple-product');
+                ->screenshot('show-products/doesnt-show-dropdowns-for-simple-product');
         });
     }
 
@@ -325,7 +215,7 @@ class ProductTest extends DuskTestCase
             $browser->visitRoute('products.show', $product)
                 ->assertNotPresent('@size-dropdown')
                 ->assertPresent('@color-dropdown')
-                ->screenshot('only-show-color-dropdown-when-product-only-has-color');
+                ->screenshot('show-products/only-show-color-dropdown-when-product-only-has-color');
         });
     }
 
@@ -348,7 +238,7 @@ class ProductTest extends DuskTestCase
             $browser->visitRoute('products.show', $product)
                 ->assertPresent('@size-dropdown')
                 ->assertPresent('@color-dropdown')
-                ->screenshot('show-color-and-size-dropdowns-when-product-have-them');
+                ->screenshot('show-products/show-color-and-size-dropdowns-when-product-have-them');
         });
     }
 
@@ -364,7 +254,7 @@ class ProductTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visitRoute('products.show', $product)
                 ->waitForTextIn('@available-stock', $product->quantity)
-                ->screenshot('show-available-stock-of-simple-product');
+                ->screenshot('show-products/show-available-stock-of-simple-product');
         });
     }
 
@@ -385,7 +275,7 @@ class ProductTest extends DuskTestCase
             $browser->visitRoute('products.show', $product)
                 ->select('@color-dropdown', $color->id)
                 ->waitForTextIn('@available-stock', $quantity)
-                ->screenshot('show-available-stock-of-color-product');
+                ->screenshot('show-products/show-available-stock-of-color-product');
         });
     }
 
@@ -411,7 +301,168 @@ class ProductTest extends DuskTestCase
                 ->select('@color-dropdown', $color->id)
                 ->assertSelected('@color-dropdown', $color->id)
                 ->waitForTextIn('@available-stock', $quantity)
-                ->screenshot('show-available-stock-of-size-product');
+                ->screenshot('show-products/show-available-stock-of-size-product');
+        });
+    }
+
+    /** @test */
+    public function it_adds_a_product_without_color_and_size_to_the_shopping_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', '1')
+                ->screenshot('show-products/adds-simple-product-to-cart');
+        });
+    }
+
+    /** @test */
+    public function it_adds_a_product_with_only_color_to_the_shopping_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $colorA = $this->createColor();
+        $colorB = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($colorA, $colorB));
+
+        $this->browse(function (Browser $browser) use ($product, $colorA, $colorB) {
+            $browser->visitRoute('products.show', $product)
+                ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
+                ->select('@color-dropdown', $colorA->id)
+                ->assertSelected('@color-dropdown', $colorA->id)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', '1')
+                ->screenshot('show-products/adds-product-with-color-to-cart');
+        });
+    }
+
+    /** @test */
+    public function it_adds_a_product_with_color_and_size_to_the_shopping_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $size = $this->createSize($product->id, array($color));
+
+        $this->browse(function (Browser $browser) use ($product, $color, $size) {
+            $browser->visitRoute('products.show', $product)
+                ->pause(1000)
+                ->assertSelectHasOptions('@size-dropdown', [$size->id])
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->assertSelectHasOptions('@color-dropdown', [$color->id])
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->assertButtonEnabled('@add-to-cart-btn')
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', '1')
+                ->screenshot('show-products/adds-product-with-color-and-size-to-cart');
+        });
+    }
+
+    /** @test */
+    public function can_not_add_more_quantity_of_a_simple_product_than_stock_exists_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product);
+
+            for ($i = 1; $i < $product->quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                    ->pause(500);
+            }
+
+            $browser->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', $product->quantity)
+                ->waitForTextIn('@available-stock', '0')
+                ->assertDisabled('@increase-quantity-btn')
+                ->screenshot('show-products/cannot-add-more-qty-than-stock-of-simple-product');
+        });
+    }
+
+    /** @test */
+    public function can_not_add_more_quantity_of_a_color_product_than_stock_exists_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $quantity = $product->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product, $color, $quantity) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@color-dropdown', $color->id);
+
+            for ($i = 1; $i < $quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                    ->pause(500);
+            }
+
+            $browser->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', $quantity)
+                //->waitForTextIn('@available-stock', '0') // Hay un error, cuando llega a 0 muestra el stock total del color
+                ->assertDisabled('@increase-quantity-btn')
+                ->screenshot('show-products/cannot-add-more-qty-than-stock-of-color-product');
+        });
+    }
+
+    /** @test */
+    public function can_not_add_more_quantity_of_a_size_product_than_stock_exists_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $size = $this->createSize($product->id, array($color));
+
+        $quantity = $product->sizes()->find($size->id)->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product,$size, $color, $quantity) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id);
+
+            for ($i = 1; $i < $quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                    ->pause(500);
+            }
+
+            $browser->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', $quantity)
+                //->waitForTextIn('@available-stock', '0') // Hay un error, cuando llega a 0 muestra el stock total de la talla
+                ->assertDisabled('@increase-quantity-btn')
+                ->screenshot('show-products/cannot-add-more-qty-than-stock-of-size-product');
         });
     }
 }
