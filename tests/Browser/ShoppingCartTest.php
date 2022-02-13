@@ -78,4 +78,89 @@ class ShoppingCartTest extends DuskTestCase
                 ->screenshot('shopping-cart/show-cart-content');
         });
     }
+
+    /** @test */
+    public function it_can_change_a_simple_product_quantity_in_the_cart_and_the_total_updates()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('shopping-cart')
+                ->assertSee($product->name)
+                ->assertSeeIn('@product-' . $product->id . '-total-cost', $product->price)
+                ->assertSeeIn('@total-cost', $product->price)
+                ->press('@increase-quantity-btn')
+                ->pause(1000)
+                ->assertSeeIn('@product-' . $product->id . '-total-cost', $product->price * 2)
+                ->assertSeeIn('@total-cost', $product->price * 2)
+                ->screenshot('shopping-cart/change-product-quantity-and-total-updates');
+        });
+    }
+
+    /** @test */
+    public function it_can_change_a_color_product_quantity_in_the_cart_and_the_total_updates()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $this->browse(function (Browser $browser) use ($product, $color) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('shopping-cart')
+                ->assertSee($product->name)
+                ->assertSeeIn('@product-' . $product->id . '-total-cost', $product->price)
+                ->assertSeeIn('@total-cost', $product->price)
+                ->press('@increase-quantity-btn')
+                ->pause(1000)
+                ->assertSeeIn('@product-' . $product->id . '-total-cost', $product->price * 2)
+                ->assertSeeIn('@total-cost', $product->price * 2)
+                ->screenshot('shopping-cart/change-color-product-quantity-and-total-updates');
+        });
+    }
+
+    /** @test */
+    public function it_can_change_a_size_product_quantity_in_the_cart_and_the_total_updates()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $size = $this->createSize($product->id, array($color));
+
+        $this->browse(function (Browser $browser) use ($product, $color, $size) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('shopping-cart')
+                ->assertSee($product->name)
+                ->assertSeeIn('@product-' . $product->id . '-total-cost', $product->price)
+                ->assertSeeIn('@total-cost', $product->price)
+                ->press('@increase-quantity-btn')
+                ->pause(1000)
+                ->assertSeeIn('@product-' . $product->id . '-total-cost', $product->price * 2)
+                ->assertSeeIn('@total-cost', $product->price * 2)
+                ->screenshot('shopping-cart/change-size-product-quantity-and-total-updates');
+        });
+    }
 }

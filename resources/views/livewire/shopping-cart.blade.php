@@ -78,7 +78,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="text-sm text-gray-500">
+                            <div dusk="product-{{ $item->id }}-total-cost" class="text-sm text-gray-500">
                                 {{ $item->price * $item->qty }} &euro;
                             </div>
                         </td>
@@ -107,7 +107,7 @@
     @if(Cart::count())
         <div class="bg-white rounded-lg shadow-lg px-6 py-4 mt-4">
             <div class="flex justify-between items-center">
-                <div class="text-gray-700">
+                <div dusk="total-cost" class="text-gray-700">
                     <span class="font-bold text-lg">Total:</span>
                     {{ Cart::subtotal() }} &euro;
                 </div>
