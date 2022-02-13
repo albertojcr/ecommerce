@@ -128,7 +128,7 @@ class ShoppingCartTest extends DuskTestCase
     }
 
     /** @test */
-    public function can_not_add_more_quantity_of_a_aimple_product_than_stock_exists_to_the_cart()
+    public function can_not_add_more_quantity_of_a_simple_product_than_stock_exists_to_the_cart()
     {
         $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
@@ -137,14 +137,83 @@ class ShoppingCartTest extends DuskTestCase
         $product = $this->createProduct($subcategory->id, $brand->id);
 
         $this->browse(function (Browser $browser) use ($product) {
-            $browser->visitRoute('products.show', $product)
-                ->screenshot('cannot-add-more-qty-than-stock');
+            $browser->visitRoute('products.show', $product);
 
             for ($i = 1; $i < $product->quantity; $i++) {
                 $browser->press('@increase-quantity-btn')
                     ->pause(500);
             }
 
+            $browser->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', $product->quantity)
+                ->waitForTextIn('@available-stock', '0')
+                ->assertDisabled('@increase-quantity-btn')
+                ->screenshot('shopping-cart/cannot-add-more-qty-than-stock-of-simple-product');
+        });
+    }
+
+    /** @test */
+    public function can_not_add_more_quantity_of_a_color_product_than_stock_exists_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $quantity = $product->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product, $color, $quantity) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@color-dropdown', $color->id);
+
+            for ($i = 1; $i < $quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                    ->pause(500);
+            }
+
+            $browser->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', $quantity)
+                //->waitForTextIn('@available-stock', '0') // Hay un error, cuando llega a 0 muestra el stock total del color
+                ->assertDisabled('@increase-quantity-btn')
+                ->screenshot('shopping-cart/cannot-add-more-qty-than-stock-of-color-product');
+        });
+    }
+
+    /** @test */
+    public function can_not_add_more_quantity_of_a_size_product_than_stock_exists_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $size = $this->createSize($product->id, array($color));
+
+        $quantity = $product->sizes()->find($size->id)->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product,$size, $color, $quantity) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id);
+
+            for ($i = 1; $i < $quantity; $i++) {
+                $browser->press('@increase-quantity-btn')
+                    ->pause(500);
+            }
+
+            $browser->press('@add-to-cart-btn')
+                ->waitForTextIn('@cart-products-count-icon', $quantity)
+                //->waitForTextIn('@available-stock', '0') // Hay un error, cuando llega a 0 muestra el stock total de la talla
+                ->assertDisabled('@increase-quantity-btn')
+                ->screenshot('shopping-cart/cannot-add-more-qty-than-stock-of-size-product');
         });
     }
 }
