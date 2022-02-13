@@ -352,4 +352,66 @@ class ProductTest extends DuskTestCase
         });
     }
 
+    /** @test */
+    public function it_shows_the_available_stock_of_a_simple_product()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visitRoute('products.show', $product)
+                ->waitForTextIn('@available-stock', $product->quantity)
+                ->screenshot('show-available-stock-of-simple-product');
+        });
+    }
+
+    /** @test */
+    public function it_shows_the_available_stock_of_a_color_product()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $quantity = $product->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product, $quantity, $color) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@color-dropdown', $color->id)
+                ->waitForTextIn('@available-stock', $quantity)
+                ->screenshot('show-available-stock-of-color-product');
+        });
+    }
+
+    /** @test */
+    public function it_shows_the_available_stock_of_a_size_product()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $size = $this->createSize($product->id, array($color));
+
+        $quantity = $product->sizes()->find($size->id)->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product,$size, $color, $quantity) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->waitForTextIn('@available-stock', $quantity)
+                ->screenshot('show-available-stock-of-size-product');
+        });
+    }
 }
