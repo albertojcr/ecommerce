@@ -31,7 +31,7 @@ trait TestHelpers
     protected function createColor()
     {
         return Color::create([
-            'name' => Factory::create()->colorName() // Duda
+            'name' => Factory::create()->colorName()
         ]);
     }
 
