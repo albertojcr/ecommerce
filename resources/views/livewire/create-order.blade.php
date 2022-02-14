@@ -30,7 +30,7 @@
                     <input x-model="envio_type" type="radio" name="envio_type" value="2" class="text-gray-600">
                     <span class="ml-2 text-gray-700">Envío a domicilio</span>
                 </label>
-                <div class="px-6 pb-6 grid grid-cols-2 gap-6" :class="{ 'hidden': envio_type != 2 }">
+                <div dusk="address-form" class="px-6 pb-6 grid grid-cols-2 gap-6" :class="{ 'hidden': envio_type != 2 }">
                     <div>
                         <x-jet-label value="Departamento" />
                         <select class="form-control w-full" wire:model="department_id">
