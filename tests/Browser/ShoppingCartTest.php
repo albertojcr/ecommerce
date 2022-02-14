@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\Models\Product;
+use App\Models\User;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
@@ -211,6 +212,40 @@ class ShoppingCartTest extends DuskTestCase
                 ->assertDontSee($product->name)
                 ->assertSee('TU CARRITO DE COMPRAS ESTÁ VACÍO')
                 ->screenshot('shopping-cart/can-clear-the-cart');
+        });
+    }
+
+    /** @test */
+    public function cart_is_saved_in_database_when_logging_out_and_is_recovered_if_user_logins_again()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $user = User::factory()->create();
+
+        $this->assertDatabaseCount('shoppingcart', 0);
+
+        $this->browse(function (Browser $browser) use ($product, $user) {
+            $browser->loginAs($user)
+                ->visitRoute('products.show', $product)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->logout();
+        });
+
+        $this->assertDatabaseCount('shoppingcart', 1);
+
+        $this->browse(function (Browser $browser) use ($product, $user) {
+            $browser->visitRoute('shopping-cart')
+                ->assertGuest()
+                ->waitForText('TU CARRITO DE COMPRAS ESTÁ VACÍO')
+                ->loginAs($user)
+                ->visitRoute('shopping-cart')
+                ->assertSee($product->name)
+                ->screenshot('shopping-cart/cart-is-saved-when-logout-and-recover-when-login-again');
         });
     }
 }
