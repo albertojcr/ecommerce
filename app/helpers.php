@@ -7,24 +7,30 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 function quantity($product_id, $color_id = null, $size_id = null)
 {
     $product = Product::find($product_id);
-    If ($size_id) {
+
+    if ($size_id) {
         $size = Size::find($size_id);
         $quantity = $size->colors->find($color_id)->pivot->quantity;
+
     } elseif ($color_id) {
         $quantity = $product->colors->find($color_id)->pivot->quantity;
+
     } else {
         $quantity = $product->quantity;
     }
+
     return $quantity;
 }
 
 function qty_added($product_id, $color_id = null, $size_id = null)
 {
     $cart = Cart::content();
+
     $item = $cart->where('id', $product_id)
         ->where('options.color_id', $color_id)
         ->where('options.size_id', $size_id)
         ->first();
+
     if ($item) {
         return $item->qty;
     } else {
@@ -43,7 +49,6 @@ function discount($item)
     $qty_available = qty_available($item->id, $item->options->color_id, $item->options->size_id);
 
     if ($item->options->size_id) {
-
         $size = Size::find($item->options->size_id);
         $size->colors()->detach($item->options->color_id);
         $size->colors()->attach([
@@ -51,14 +56,12 @@ function discount($item)
         ]);
 
     } elseif($item->options->color_id) {
-
         $product->colors()->detach($item->options->color_id);
         $product->colors()->attach([
             $item->options->color_id => ['quantity' => $qty_available]
         ]);
 
     } else {
-
         $product->quantity = $qty_available;
         $product->save();
     }
@@ -71,7 +74,6 @@ function increase($item)
     $quantity = quantity($item->id, $item->options->color_id, $item->options->size_id) + $item->qty;
 
     if ($item->options->size_id) {
-
         $size = Size::find($item->options->size_id);
         $size->colors()->detach($item->options->color_id);
         $size->colors()->attach([
@@ -79,14 +81,12 @@ function increase($item)
         ]);
 
     } elseif($item->options->color_id) {
-
         $product->colors()->detach($item->options->color_id);
         $product->colors()->attach([
             $item->options->color_id => ['quantity' => $quantity]
         ]);
 
     } else {
-
         $product->quantity = $quantity;
         $product->save();
     }
