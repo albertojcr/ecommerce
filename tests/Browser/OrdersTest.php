@@ -170,5 +170,54 @@ class OrdersTest extends DuskTestCase
         $this->assertDatabaseCount('orders', 1);
     }
 
+    /** @test */
+    public function the_address_selects_show_correct_options_when_selecting_either_one()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $user = User::factory()->create();
+
+        $deparmentA = Department::factory()->create();
+        $deparmentB = Department::factory()->create();
+
+        $cityA = City::factory()->create([
+            'department_id' => $deparmentA->id
+        ]);
+
+        $cityB = City::factory()->create([
+            'department_id' => $deparmentB->id
+        ]);
+
+        $districtA = District::factory()->create([
+            'city_id' => $cityA->id
+        ]);
+
+        $districtB = District::factory()->create([
+            'city_id' => $cityB->id
+        ]);
+
+        $this->browse(function (Browser $browser) use ($product, $user, $deparmentA, $deparmentB, $cityA, $cityB, $districtA, $districtB) {
+            $browser->loginAs($user)
+                ->visitRoute('products.show', $product)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('orders.create')
+                ->radio('envio_type', 2)
+                ->assertSelectHasOptions('@department', [$deparmentA->id, $deparmentB->id])
+                ->select('@department', $deparmentA->id)
+                ->pause(1000)
+                ->assertSelectHasOption('@city', $cityA->id)
+                ->assertSelectMissingOption('@city', $cityB->id)
+                ->select('@city', $cityA->id)
+                ->pause(1000)
+                ->assertSelectHasOption('@district', $districtA->id)
+                ->assertSelectMissingOption('@district', $districtB->id)
+                ->screenshot('orders/address-selects-show-correct-options');
+        });
+    }
 
 }
