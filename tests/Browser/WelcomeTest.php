@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -62,6 +63,23 @@ class WelcomeTest extends DuskTestCase
                 ->assertDontSee(Str::limit($unpublishedProductA->name, 20))
                 ->assertDontSee(Str::limit($unpublishedProductB->name, 20))
                 ->screenshot('welcome/only-show-published-products');
+        });
+    }
+
+    /** @test */
+    public function user_can_access_to_his_orders_using_the_dropdown()
+    {
+        $this->createCategory();
+
+        $user = User::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit('/')
+                ->click('@user-btn')
+                ->click('@my-orders')
+                ->assertRouteIs('orders.index')
+                ->screenshot('welcome/user-can-access-to-his-orders');
         });
     }
 }
