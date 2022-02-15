@@ -138,7 +138,7 @@ class OrdersTest extends DuskTestCase
         ]);
 
         $district = District::factory()->create([
-           'city_id' => $city->id
+            'city_id' => $city->id
         ]);
 
         $this->assertDatabaseCount('orders', 0);
@@ -218,6 +218,42 @@ class OrdersTest extends DuskTestCase
                 ->assertSelectMissingOption('@district', $districtB->id)
                 ->screenshot('orders/address-selects-show-correct-options');
         });
+    }
+
+    /** @test */
+    public function the_stock_of_a_simple_product_updates_when_creating_an_order()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+        $initialStock = $product->quantity;
+
+        $user = User::factory()->create();
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'quantity' => 15
+        ]);
+
+        $this->browse(function (Browser $browser) use ($user, $product, $initialStock) {
+            $browser->loginAs($user)
+                ->visitRoute('products.show', $product)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('orders.create')
+                ->type('@contact-name', 'Nombre')
+                ->type('@contact-phone', '657485734')
+                ->radio('envio_type', 1)
+                ->press('@create-order')
+                ->screenshot('orders-test/stock-of-simple-product-updates-in-db-when-creating-order');
+        });
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'quantity' => $initialStock - 1
+        ]);
     }
 
 }
