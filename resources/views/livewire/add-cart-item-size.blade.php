@@ -20,7 +20,13 @@
     </div>
 
     <p dusk="available-stock" class="text-gray-700 my-4">
-        <span class="font-semibold text-lg">Stock disponible:</span> {{ $product->stock }}
+        <span class="font-semibold text-lg">Stock disponible:</span>
+
+        @if($quantity)
+            {{ $quantity }}
+        @else
+            {{ $product->stock }}
+        @endif
     </p>
 
     <div class="flex">
