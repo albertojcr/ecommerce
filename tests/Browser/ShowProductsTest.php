@@ -465,4 +465,76 @@ class ShowProductsTest extends DuskTestCase
                 ->screenshot('show-products/cannot-add-more-qty-than-stock-of-size-product');
         });
     }
+
+    /** @test */
+    public function the_stock_of_a_simple_product_changes_when_adding_it_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $initialStock = $product->quantity;
+
+        $this->browse(function (Browser $browser) use ($product, $initialStock) {
+            $browser->visitRoute('products.show', $product)
+                ->assertSeeIn('@available-stock', $initialStock)
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@available-stock', $initialStock - 1)
+                ->screenshot('show-products/stock-of-simple-product-changes-when-adding-to-cart');
+        });
+    }
+
+    /** @test */
+    public function the_stock_of_a_color_product_changes_when_adding_it_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $initialStock = $product->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product, $color, $initialStock) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->assertSeeIn('@available-stock', $initialStock)
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@available-stock', $initialStock - 1)
+                ->screenshot('show-products/stock-of-color-product-changes-when-adding-to-cart');
+        });
+    }
+
+    /** @test */
+    public function the_stock_of_a_size_product_changes_when_adding_it_to_the_cart()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $size = $this->createSize($product->id, array($color));
+
+        $initialStock = $product->sizes()->find($size->id)->colors()->find($color->id)->pivot->quantity;
+
+        $this->browse(function (Browser $browser) use ($product, $size, $color, $initialStock) {
+            $browser->visitRoute('products.show', $product)
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->assertSeeIn('@available-stock', $initialStock)
+                ->press('@add-to-cart-btn')
+                ->waitForTextIn('@available-stock', $initialStock - 1)
+                ->screenshot('show-products/stock-of-size-product-changes-when-adding-to-cart');
+        });
+    }
 }
