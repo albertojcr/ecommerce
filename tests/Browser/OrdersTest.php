@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\Department;
 use App\Models\District;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -221,7 +222,7 @@ class OrdersTest extends DuskTestCase
     }
 
     /** @test */
-    public function the_stock_of_a_simple_product_updates_when_creating_an_order()
+    public function the_stock_of_a_simple_product_updates_in_database_when_an_order_is_created()
     {
         $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
@@ -247,11 +248,100 @@ class OrdersTest extends DuskTestCase
                 ->type('@contact-phone', '657485734')
                 ->radio('envio_type', 1)
                 ->press('@create-order')
-                ->screenshot('orders-test/stock-of-simple-product-updates-in-db-when-creating-order');
+                ->screenshot('orders/stock-of-simple-product-updates-in-db-when-creating-order');
         });
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
+            'quantity' => $initialStock - 1
+        ]);
+    }
+
+    /** @test */
+    public function the_stock_of_a_color_product_updates_in_database_when_an_order_is_created()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+        $initialStock = $product->colors()->find($color->id)->pivot->quantity;
+
+        $user = User::factory()->create();
+
+        $this->assertDatabaseHas('color_product', [
+            'color_id' => $color->id,
+            'product_id' => $product->id,
+            'quantity' => $initialStock
+        ]);
+
+        $this->browse(function (Browser $browser) use ($user, $product, $color, $initialStock) {
+            $browser->loginAs($user)
+                ->visitRoute('products.show', $product)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('orders.create')
+                ->type('@contact-name', 'Nombre')
+                ->type('@contact-phone', '657485734')
+                ->radio('envio_type', 1)
+                ->press('@create-order')
+                ->screenshot('orders/stock-of-color-product-updates-in-db-when-creating-order');
+        });
+
+        $this->assertDatabaseHas('color_product', [
+            'color_id' => $color->id,
+            'product_id' => $product->id,
+            'quantity' => $initialStock - 1
+        ]);
+    }
+
+    /** @test */
+    public function the_stock_of_a_size_product_updates_in_database_when_an_order_is_created()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id, true, true);
+        $brand = $this->createBrand($category->id);
+
+        $color = $this->createColor();
+
+        $product = $this->createProduct($subcategory->id, $brand->id, Product::PUBLICADO, array($color));
+
+        $size = $this->createSize($product->id, array($color));
+
+        $initialStock = $product->sizes()->find($size->id)->colors()->find($color->id)->pivot->quantity;
+
+        $user = User::factory()->create();
+
+        $this->assertDatabaseHas('color_size', [
+            'color_id' => $color->id,
+            'size_id' => $size->id,
+            'quantity' => $initialStock
+        ]);
+
+        $this->browse(function (Browser $browser) use ($user, $product, $size, $color, $initialStock) {
+            $browser->loginAs($user)
+                ->visitRoute('products.show', $product)
+                ->select('@size-dropdown', $size->id)
+                ->assertSelected('@size-dropdown', $size->id)
+                ->select('@color-dropdown', $color->id)
+                ->assertSelected('@color-dropdown', $color->id)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('orders.create')
+                ->type('@contact-name', 'Nombre')
+                ->type('@contact-phone', '657485734')
+                ->radio('envio_type', 1)
+                ->press('@create-order')
+                ->screenshot('orders/stock-of-size-product-updates-in-db-when-creating-order');
+        });
+
+        $this->assertDatabaseHas('color_size', [
+            'color_id' => $color->id,
+            'size_id' => $size->id,
             'quantity' => $initialStock - 1
         ]);
     }
