@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
@@ -344,6 +345,49 @@ class OrdersTest extends DuskTestCase
             'size_id' => $size->id,
             'quantity' => $initialStock - 1
         ]);
+    }
+
+    /** @test */
+    public function pending_orders_are_cancelled_after_a_while()
+    {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
+
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $user = User::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($user, $product) {
+            $browser->loginAs($user)
+                ->visitRoute('products.show', $product)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('orders.create')
+                ->type('@contact-name', 'Nombre')
+                ->type('@contact-phone', '657485734')
+                ->radio('envio_type', 1)
+                ->press('@create-order')
+                ->pause(1000);
+
+            $order = Order::first();
+            $order->created_at = now()->subMinutes(11);
+            $order->save();
+
+            $this->assertDatabaseHas('orders', [
+                'id' => $order->id,
+                'user_id' => $user->id,
+                'status' => 1
+            ]);
+
+            $this->artisan('schedule:run');
+
+            $this->assertDatabaseHas('orders', [
+                'id' => $order->id,
+                'user_id' => $user->id,
+                'status' => 5
+            ]);
+        });
     }
 
 }
