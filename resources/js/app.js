@@ -11,6 +11,5 @@ Alpine.start();
 // SweetAlert2
 window.Swal = require('sweetalert2');
 
-
-
-
+// Dropzone
+window.Dropzone = require('dropzone');
