@@ -19,5 +19,8 @@ window.Dropzone = Dropzone;
 import Glider from 'glider-js';
 window.Glider = Glider;
 
-// Glider JS
+// Flexslider
 window.Flexslider = require('flexslider');
+
+// jQuery
+
