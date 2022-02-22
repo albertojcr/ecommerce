@@ -178,20 +178,22 @@
 
     @push('scripts')
         <script>
-            Dropzone.options.myAwesomeDropzone = {
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                dictDefaultMessage: "Mueva una imagen al recuadro",
-                acceptedFiles: 'image/*',
-                paramName: "file", // The name that will be used to transfer the file
-                maxFilesize: 2, // MB
-                complete: function(file) {
-                    this.removeFile(file);
-                },
-                queuecomplete: function() {
-                    Livewire.emit('refreshProduct');
-                }
+            window.onload = function () {
+                new Dropzone('#my-awesome-dropzone', {
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    dictDefaultMessage: "Mueva una imagen al recuadro",
+                    acceptedFiles: 'image/*',
+                    paramName: "file", // The name that will be used to transfer the file
+                    maxFilesize: 2, // MB
+                    complete: function(file) {
+                        this.removeFile(file);
+                    },
+                    queuecomplete: function() {
+                        Livewire.emit('refreshProduct');
+                    }
+                });
             };
 
             Livewire.on('deleteSize', sizeId => {

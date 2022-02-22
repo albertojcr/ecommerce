@@ -12,4 +12,5 @@ Alpine.start();
 window.Swal = require('sweetalert2');
 
 // Dropzone
-window.Dropzone = require('dropzone');
+import Dropzone from "dropzone";
+window.Dropzone = Dropzone;
