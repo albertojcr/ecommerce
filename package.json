@@ -15,6 +15,8 @@
         "alpinejs": "^3.0.6",
         "axios": "^0.21",
         "laravel-mix": "^6.0.41",
+        "less": "^4.1.2",
+        "less-loader": "^10.2.0",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "postcss-import": "^14.0.1",
@@ -27,6 +29,7 @@
         "@ckeditor/ckeditor5-build-classic": "^32.0.0",
         "@fortawesome/fontawesome-free": "^6.0.0",
         "dropzone": "^6.0.0-beta.2",
+        "flexslider": "^2.7.2",
         "glider-js": "^1.7.7",
         "sweetalert2": "^11.4.4"
     }

@@ -12,6 +12,9 @@
 /* Glider JS */
 @import 'glider-js/glider.css';
 
+/* Flexslider */
+@import 'flexslider/flexslider.css';
+
 /* Tailwind Custom Styles */
 @layer components {
     .container-menu {
