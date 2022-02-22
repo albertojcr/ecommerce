@@ -22,7 +22,7 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="{{ asset('vendor/ckeditor/build/ckeditor.js') }}"></script>
+        {{--<script src="{{ asset('vendor/ckeditor/build/ckeditor.js') }}"></script>--}}
         {{--<script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>--}}
         <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     </head>
