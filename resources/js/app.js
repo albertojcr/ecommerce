@@ -14,3 +14,7 @@ window.Swal = require('sweetalert2');
 // Dropzone
 import Dropzone from "dropzone";
 window.Dropzone = Dropzone;
+
+/* Glider JS */
+import Glider from 'glider-js';
+window.Glider = Glider;

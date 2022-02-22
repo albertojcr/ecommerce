@@ -1,3 +1,4 @@
+/* Tailwind CSS */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -8,6 +9,10 @@
 /* Dropzone */
 @import 'dropzone/dist/dropzone.css';
 
+/* Glider JS */
+@import 'glider-js/glider.css';
+
+/* Tailwind Custom Styles */
 @layer components {
     .container-menu {
         @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
