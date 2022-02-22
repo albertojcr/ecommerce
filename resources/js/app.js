@@ -21,6 +21,3 @@ window.Glider = Glider;
 
 // Flexslider
 window.Flexslider = require('flexslider');
-
-// jQuery
-
