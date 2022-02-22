@@ -12,10 +12,10 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+        {{--<link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">--}}
         <link rel="stylesheet" href="{{ asset('vendor/glider-js/glider.min.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/flex-slider/flexslider.css') }}">
-{{--        <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.css') }}">--}}
+        {{--<link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.css') }}">--}}
         <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
         @livewireStyles
@@ -23,7 +23,7 @@
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
         <script src="{{ asset('vendor/ckeditor/build/ckeditor.js') }}"></script>
-{{--        <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>--}}
+        {{--<script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>--}}
         <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     </head>
     <body class="font-sans antialiased">
