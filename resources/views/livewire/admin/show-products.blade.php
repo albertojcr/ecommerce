@@ -12,12 +12,33 @@
 
     <!-- Tabla con filtros -->
     <x-table-responsive>
-        <div class="px-6 py-4">
-            <x-jet-input class="w-full"
+        <div class="px-6 py-4 flex justify-between">
+            <x-jet-input class="w-1/3"
                          dusk="search"
                          wire:model="search"
                          type="text"
                          placeholder="Introduzca el nombre del producto a buscar" />
+
+            <div>
+                Mostrar
+                <select class="form-control" wire:model="">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                resultados
+            </div>
+        </div>
+
+        <div class="px-6 py-4 flex justify-between">
+            <div class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 cursor-pointer">
+                <i class="fa-solid fa-filter mr-2"></i>
+                Filtros avanzados
+            </div>
+            <div class="inline-flex items-center justify-center px-4 py-2 bg-gray-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-600 cursor-pointer">
+                <i class="fa-solid fa-table-columns mr-1"></i>
+                Columnas
+            </div>
         </div>
 
         @if($products->count())
@@ -151,7 +172,7 @@
 
 
 
-    <!-- Tabla original -->
+<!-- Tabla original -->
     {{--<x-table-responsive>
         <div class="px-6 py-4">
             <x-jet-input class="w-full"
