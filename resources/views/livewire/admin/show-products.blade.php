@@ -79,19 +79,17 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @forelse($product->colors as $color)
-                                <div class="text-sm text-gray-900">{{ trans(ucfirst($color->name)) . ': ' }} <span class="text-sm text-gray-500">{{ $color->pivot->quantity }}</span></div>
+                                <div class="text-sm text-gray-900">{{ __(ucfirst($color->name)) . ': ' }} <span class="text-sm text-gray-500">{{ $color->pivot->quantity }}</span></div>
                             @empty
                                 <span class="text-sm text-gray-500">-</span>
                             @endforelse
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @forelse($product->sizes as $size)
-                                <div class="text-sm text-gray-900">{{ $size->name }}</div>
-
-                                @foreach($size->colors as $color)
-                                    <span class="text-sm text-gray-500 pl-2">{{ '- ' . trans(ucfirst($color->name)) . ': ' . $color->pivot->quantity }}</span>
-                                @endforeach
-
+                                <div class="text-sm text-gray-900 underline cursor-pointer"
+                                     wire:loading.attr="disabled"
+                                     wire:target="showSizeInfo"
+                                     wire:click="showSizeInfo({{ $size }})">{{ $size->name }}</div>
                             @empty
                                 <span class="text-sm text-gray-500">-</span>
                             @endforelse
@@ -127,6 +125,28 @@
         @endif
     </x-table-responsive>
 
+    @if($shownSize)
+        <x-jet-dialog-modal wire:model="open">
+            <x-slot name="title">
+                {{ $shownSize->product->name }}
+
+            </x-slot>
+            <x-slot name="content">
+                <div class="mb-4">
+                    {{ $shownSize->name }}
+
+                    @foreach($shownSize->colors as $color)
+                        <x-jet-label>{{ __(ucfirst($color->name)) . ': ' . $color->pivot->quantity }}</x-jet-label>
+                    @endforeach
+                </div>
+            </x-slot>
+            <x-slot name="footer">
+                <x-jet-secondary-button wire:click="$set('open', false)">
+                    Cerrar
+                </x-jet-secondary-button>
+            </x-slot>
+        </x-jet-dialog-modal>
+    @endif
 
 
 
