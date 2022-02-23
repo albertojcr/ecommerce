@@ -41,6 +41,53 @@
             </div>
         </div>
 
+        <div class="px-6 py-4 flex gap-4 border-2 bg-indigo-50">
+
+            <div>
+                <x-jet-label value="Categoría" />
+                <select class="form-control" wire:model="category_id">
+                    <option value="" selected disabled>Seleccione una categoría</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <x-jet-label value="Subcategoría" />
+                <select class="w-full form-control" wire:model="subcategory_id">
+                    <option value="" selected disabled>Seleccione una subcategoría</option>
+                    @foreach($subcategories as $subcategory)
+                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <x-jet-label value="Marca" />
+                <select class="form-control w-full" wire:model="brand_id">
+                    <option value="" selected disabled>Seleccione una marca</option>
+{{--                    @foreach ($brands as $brand)
+                        <option value="{{$brand->id}}">{{$brand->name}}</option>
+                    @endforeach--}}
+                </select>
+            </div>
+            <div>
+                <x-jet-label value="Precio" />
+            </div>
+            <div>
+                <x-jet-label value="Fecha de creación" />
+            </div>
+            <div>
+                <x-jet-label value="Color" />
+            </div>
+            <div>
+                <x-jet-label value="Talla" />
+            </div>
+            <div>
+                <x-jet-label value="Stock" />
+            </div>
+
+        </div>
+
         @if($products->count())
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">

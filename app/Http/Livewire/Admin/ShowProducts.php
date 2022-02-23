@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Size;
+use App\Models\Subcategory;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,11 +15,26 @@ class ShowProducts extends Component
 
     public $search, $shownSize;
 
-    public $open = false;
+    public $categories = [], $subcategories = [];
+
+    public $category_id = '', $subcategory_id = '';
+
+    public $open = false, $openFilters = false;
 
     public $filters = [
         'rowsToShow' => '10'
     ];
+
+    public function mount()
+    {
+        $this->categories = Category::all();
+    }
+
+    public function updatedCategoryId($value)
+    {
+        $this->subcategories = Subcategory::where('category_id', $value)->get();
+        $this->subcategory_id = '';
+    }
 
     public function updatingSearch()
     {
