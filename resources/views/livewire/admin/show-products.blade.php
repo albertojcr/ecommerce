@@ -21,7 +21,7 @@
 
             <div>
                 Mostrar
-                <select class="form-control" wire:model="">
+                <select class="form-control" wire:model="filters.rowsToShow">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>

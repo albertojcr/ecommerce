@@ -15,6 +15,10 @@ class ShowProducts extends Component
 
     public $open = false;
 
+    public $filters = [
+        'rowsToShow' => '10'
+    ];
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -29,7 +33,8 @@ class ShowProducts extends Component
 
     public function render()
     {
-        $products = Product::where('name', 'LIKE', "%{$this->search}%")->paginate(10);
+        $products = Product::where('name', 'LIKE', "%{$this->search}%")
+            ->paginate($this->filters['rowsToShow']);
 
         return view('livewire.admin.show-products', compact('products'))->layout('layouts.admin');
     }
