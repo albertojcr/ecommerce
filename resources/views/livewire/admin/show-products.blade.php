@@ -12,12 +12,39 @@
 
     <!-- Tabla con filtros -->
     <x-table-responsive>
-        <div class="px-6 py-4 flex justify-between">
+        <div class="px-6 py-4 flex">
             <x-jet-input class="w-1/3"
                          dusk="search"
                          wire:model="search"
                          type="text"
                          placeholder="Introduzca el nombre del producto a buscar" />
+
+
+        </div>
+
+        <div class="px-6 py-4 flex items-center gap-10">
+            <div class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 cursor-pointer">
+                <i class="fa-solid fa-filter mr-2"></i>
+                Filtros avanzados
+            </div>
+
+            <x-jet-dropdown align="right" width="48">
+                <x-slot name="trigger">
+                    <div class="inline-flex items-center justify-center px-4 py-2 bg-gray-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-600 cursor-pointer">
+                        <i class="fa-solid fa-table-columns mr-1"></i>
+                        Columnas
+                    </div>
+                </x-slot>
+
+                <x-slot name="content">
+                    @foreach($columns as $column)
+                        <div class="block px-4 py-2 text-sm">
+                            <input type="checkbox" wire:model="selectedColumns" value="{{ $column }}">
+                            <label>{{ ucfirst($column) }}</label>
+                        </div>
+                    @endforeach
+                </x-slot>
+            </x-jet-dropdown>
 
             <div>
                 Mostrar
@@ -28,17 +55,7 @@
                 </select>
                 resultados
             </div>
-        </div>
 
-        <div class="px-6 py-4 flex justify-between">
-            <div class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 cursor-pointer">
-                <i class="fa-solid fa-filter mr-2"></i>
-                Filtros avanzados
-            </div>
-            <div class="inline-flex items-center justify-center px-4 py-2 bg-gray-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-600 cursor-pointer">
-                <i class="fa-solid fa-table-columns mr-1"></i>
-                Columnas
-            </div>
         </div>
 
         <div class="px-6 py-4 flex gap-4 border-2 bg-indigo-50">
@@ -92,30 +109,52 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nombre
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Categoría y subcategoría
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Marca
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Colores
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Tallas
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Estado
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Precio
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Fecha creación
-                    </th>
+                    @if($this->showColumn('name'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Nombre
+                        </th>
+                    @endif
+                    @if($this->showColumn('category'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Categoría
+                        </th>
+                    @endif
+                    @if($this->showColumn('subcategory'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Subcategoría
+                        </th>
+                    @endif
+                    @if($this->showColumn('brand'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Marca
+                        </th>
+                    @endif
+                    @if($this->showColumn('size'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Tallas
+                        </th>
+                    @endif
+                    @if($this->showColumn('color'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Colores
+                        </th>
+                    @endif
+                    @if($this->showColumn('status'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Estado
+                        </th>
+                    @endif
+                    @if($this->showColumn('price'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Precio
+                        </th>
+                    @endif
+                    @if($this->showColumn('created'))
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Fecha creación
+                        </th>
+                    @endif
+
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Editar</span>
                     </th>
@@ -124,55 +163,76 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                 @foreach($products as $product)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10 object-cover">
-                                    <img class="h-10 w-10 rounded-full"
-                                         src="{{ $product->images->count() ? Storage::url($product->images->first()->url) : 'img/default.jpg' }}"
-                                         alt="">
-                                </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ $product->name }}
+                        @if($this->showColumn('name'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 object-cover">
+                                        <img class="h-10 w-10 rounded-full"
+                                             src="{{ $product->images->count() ? Storage::url($product->images->first()->url) : 'img/default.jpg' }}"
+                                             alt="">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $product->name }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $product->subcategory->category->name }}</div>
-                            <div class="text-sm text-gray-500">{{ $product->subcategory->name }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $product->brand->name }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @forelse($product->colors as $color)
-                                <div class="text-sm text-gray-900">{{ __(ucfirst($color->name)) . ': ' }} <span class="text-sm text-gray-500">{{ $color->pivot->quantity }}</span></div>
-                            @empty
-                                <span class="text-sm text-gray-500">-</span>
-                            @endforelse
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @forelse($product->sizes as $size)
-                                <div class="text-sm text-gray-900 underline cursor-pointer"
-                                     wire:loading.attr="disabled"
-                                     wire:target="showSizeInfo"
-                                     wire:click="showSizeInfo({{ $size }})">{{ $size->name }}</div>
-                            @empty
-                                <span class="text-sm text-gray-500">-</span>
-                            @endforelse
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                            </td>
+                        @endif
+                        @if($this->showColumn('category'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->subcategory->category->name }}</div>
+                                </td>
+                        @endif
+                        @if($this->showColumn('subcategory'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->subcategory->name }}</div>
+                                </td>
+                        @endif
+                        @if($this->showColumn('brand'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->brand->name }}</div>
+                                </td>
+                        @endif
+                        @if($this->showColumn('size'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                    @forelse($product->sizes as $size)
+                                        <div class="text-sm text-gray-900 underline cursor-pointer"
+                                             wire:loading.attr="disabled"
+                                             wire:target="showSizeInfo"
+                                             wire:click="showSizeInfo({{ $size }})">{{ $size->name }}</div>
+                                    @empty
+                                        <span class="text-sm text-gray-500">-</span>
+                                    @endforelse
+                                </td>
+                        @endif
+                        @if($this->showColumn('color'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                    @forelse($product->colors as $color)
+                                        <div class="text-sm text-gray-900">{{ __(ucfirst($color->name)) . ': ' }} <span class="text-sm text-gray-500">{{ $color->pivot->quantity }}</span></div>
+                                    @empty
+                                        <span class="text-sm text-gray-500">-</span>
+                                    @endforelse
+                                </td>
+                        @endif
+                        @if($this->showColumn('status'))
+                            <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $product->status == 1 ? 'red' : 'green' }}-100 text-{{ $product->status == 1 ? 'red' : 'green' }}-800">
                             {{ $product->status == 1 ? 'Borrador' : 'Publicado' }}
                         </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $product->price }} &euro;
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $product->created_at->format('d-m-Y') }}</div>
-                        </td>
+                                </td>
+                        @endif
+                        @if($this->showColumn('price'))
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $product->price }} &euro;
+                                </td>
+                        @endif
+                        @if($this->showColumn('created'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->created_at->format('d-m-Y') }}</div>
+                                </td>
+                        @endif
+
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <a href="{{ route('admin.products.edit', $product) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
                         </td>

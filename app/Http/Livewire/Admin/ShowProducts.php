@@ -21,6 +21,9 @@ class ShowProducts extends Component
 
     public $open = false, $openFilters = false;
 
+    public $columns = ['name', 'category', 'subcategory', 'brand', 'size', 'color', 'status', 'price', 'created'];
+    public $selectedColumns = [];
+
     public $filters = [
         'rowsToShow' => '10'
     ];
@@ -28,6 +31,13 @@ class ShowProducts extends Component
     public function mount()
     {
         $this->categories = Category::all();
+
+        $this->selectedColumns = $this->columns;
+    }
+
+    public function showColumn($column)
+    {
+        return in_array($column, $this->selectedColumns);
     }
 
     public function updatedCategoryId($value)
