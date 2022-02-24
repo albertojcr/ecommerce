@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ openAdvancedFilters: false }">
     <x-slot name="header">
         <div class="flex items-center">
             <h2 class="font-semibold text-xl text-gray-600">
@@ -18,12 +18,11 @@
                          wire:model="search"
                          type="text"
                          placeholder="Introduzca el nombre del producto a buscar" />
-
-
         </div>
 
         <div class="px-6 py-4 flex items-center gap-10">
-            <div class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 cursor-pointer">
+            <div @click="openAdvancedFilters = !openAdvancedFilters"
+                 class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 rounded font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 cursor-pointer">
                 <i class="fa-solid fa-filter mr-2"></i>
                 Filtros avanzados
             </div>
@@ -58,8 +57,8 @@
 
         </div>
 
-        <div class="px-6 py-4 flex gap-4 border-2 bg-indigo-50">
-
+        <!-- Filtros avanzados -->
+        <div class="px-6 py-4 flex gap-4 border-2 bg-indigo-50 hidden" :class="{ 'hidden': !openAdvancedFilters }">
             <div>
                 <x-jet-label value="Categoría" />
                 <select class="form-control" wire:model="category_id">
