@@ -39,7 +39,7 @@
                     @foreach($columns as $column)
                         <div class="block px-4 py-2 text-sm">
                             <input type="checkbox" wire:model="selectedColumns" value="{{ $column }}">
-                            <label>{{ ucfirst($column) }}</label>
+                            <label>{{ __(ucfirst($column)) }}</label>
                         </div>
                     @endforeach
                 </x-slot>
@@ -107,151 +107,151 @@
         @if($products->count())
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
-                <tr>
-                    @if($this->showColumn('name'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Nombre
-                        </th>
-                    @endif
-                    @if($this->showColumn('category'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Categoría
-                        </th>
-                    @endif
-                    @if($this->showColumn('subcategory'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Subcategoría
-                        </th>
-                    @endif
-                    @if($this->showColumn('brand'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Marca
-                        </th>
-                    @endif
-                    @if($this->showColumn('size'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Tallas
-                        </th>
-                    @endif
-                    @if($this->showColumn('color'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Colores
-                        </th>
-                    @endif
-                    @if($this->showColumn('status'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Estado
-                        </th>
-                    @endif
-                    @if($this->showColumn('price'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Precio
-                        </th>
-                    @endif
-                    @if($this->showColumn('created'))
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Fecha creación
-                        </th>
-                    @endif
-
-                    <th scope="col" class="relative px-6 py-3">
-                        <span class="sr-only">Editar</span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                @foreach($products as $product)
                     <tr>
                         @if($this->showColumn('name'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10 object-cover">
-                                        <img class="h-10 w-10 rounded-full"
-                                             src="{{ $product->images->count() ? Storage::url($product->images->first()->url) : 'img/default.jpg' }}"
-                                             alt="">
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ $product->name }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nombre
+                            </th>
                         @endif
                         @if($this->showColumn('category'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $product->subcategory->category->name }}</div>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Categoría
+                            </th>
                         @endif
                         @if($this->showColumn('subcategory'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $product->subcategory->name }}</div>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Subcategoría
+                            </th>
                         @endif
                         @if($this->showColumn('brand'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $product->brand->name }}</div>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Marca
+                            </th>
                         @endif
-                        @if($this->showColumn('size'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @forelse($product->sizes as $size)
-                                    <div class="text-sm text-gray-900 underline cursor-pointer"
-                                         wire:loading.attr="disabled"
-                                         wire:target="showSizeInfo"
-                                         wire:click="showSizeInfo({{ $size }})">{{ $size->name }}</div>
-                                @endforeach
-                            </td>
+                        @if($this->showColumn('sizes'))
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Tallas
+                            </th>
                         @endif
-                        @if($this->showColumn('color'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($product->subcategory->size)
-
-                                    @foreach($product->sizes as $size)
-                                        <div class="text-sm text-gray-500">
-                                            @forelse($size->colors as $color)
-                                                <span class="pl-1">{{ '- ' . trans(ucfirst($color->name)) . ': ' . $color->pivot->quantity }}</span>
-                                            @empty
-                                                <span>-</span>
-                                            @endforelse
-                                        </div>
-                                    @endforeach
-
-                                @elseif($product->subcategory->color)
-
-                                    @forelse($product->colors as $color)
-                                        <div class="text-sm text-gray-900">{{ __(ucfirst($color->name)) . ': ' }} <span class="text-sm text-gray-500">{{ $color->pivot->quantity }}</span></div>
-                                    @empty
-                                        <span class="text-sm text-gray-500">-</span>
-                                    @endforelse
-
-                                @endif
-
-                            </td>
+                        @if($this->showColumn('colors'))
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Colores
+                            </th>
                         @endif
                         @if($this->showColumn('status'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $product->status == 1 ? 'red' : 'green' }}-100 text-{{ $product->status == 1 ? 'red' : 'green' }}-800">
-                            {{ $product->status == 1 ? 'Borrador' : 'Publicado' }}
-                        </span>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Estado
+                            </th>
                         @endif
                         @if($this->showColumn('price'))
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $product->price }} &euro;
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Precio
+                            </th>
                         @endif
                         @if($this->showColumn('created'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $product->created_at->format('d-m-Y') }}</div>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Fecha creación
+                            </th>
                         @endif
 
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('admin.products.edit', $product) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
-                        </td>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Editar</span>
+                        </th>
                     </tr>
-                @endforeach
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($products as $product)
+                        <tr>
+                            @if($this->showColumn('name'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 object-cover">
+                                            <img class="h-10 w-10 rounded-full"
+                                                 src="{{ $product->images->count() ? Storage::url($product->images->first()->url) : 'img/default.jpg' }}"
+                                                 alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ $product->name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            @endif
+                            @if($this->showColumn('category'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->subcategory->category->name }}</div>
+                                </td>
+                            @endif
+                            @if($this->showColumn('subcategory'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->subcategory->name }}</div>
+                                </td>
+                            @endif
+                            @if($this->showColumn('brand'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->brand->name }}</div>
+                                </td>
+                            @endif
+                            @if($this->showColumn('sizes'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @forelse($product->sizes as $size)
+                                        <div class="text-sm text-gray-900 underline cursor-pointer"
+                                             wire:loading.attr="disabled"
+                                             wire:target="showSizeInfo"
+                                             wire:click="showSizeInfo({{ $size }})">{{ $size->name }}</div>
+                                    @endforeach
+                                </td>
+                            @endif
+                            @if($this->showColumn('colors'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($product->subcategory->size)
+
+                                        @foreach($product->sizes as $size)
+                                            <div class="text-sm text-gray-500">
+                                                @forelse($size->colors as $color)
+                                                    <span class="pl-1">{{ '- ' . trans(ucfirst($color->name)) . ': ' . $color->pivot->quantity }}</span>
+                                                @empty
+                                                    <span>-</span>
+                                                @endforelse
+                                            </div>
+                                        @endforeach
+
+                                    @elseif($product->subcategory->color)
+
+                                        @forelse($product->colors as $color)
+                                            <div class="text-sm text-gray-900">{{ __(ucfirst($color->name)) . ': ' }} <span class="text-sm text-gray-500">{{ $color->pivot->quantity }}</span></div>
+                                        @empty
+                                            <span class="text-sm text-gray-500">-</span>
+                                        @endforelse
+
+                                    @endif
+
+                                </td>
+                            @endif
+                            @if($this->showColumn('status'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $product->status == 1 ? 'red' : 'green' }}-100 text-{{ $product->status == 1 ? 'red' : 'green' }}-800">
+                                {{ $product->status == 1 ? 'Borrador' : 'Publicado' }}
+                            </span>
+                                </td>
+                            @endif
+                            @if($this->showColumn('price'))
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $product->price }} &euro;
+                                </td>
+                            @endif
+                            @if($this->showColumn('created'))
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $product->created_at->format('d-m-Y') }}</div>
+                                </td>
+                            @endif
+
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{{ route('admin.products.edit', $product) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         @else

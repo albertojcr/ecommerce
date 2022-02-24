@@ -21,7 +21,7 @@ class ShowProducts extends Component
 
     public $open = false, $openFilters = false;
 
-    public $columns = ['name', 'category', 'subcategory', 'brand', 'size', 'color', 'status', 'price', 'created'];
+    public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'createdAt'];
     public $selectedColumns = [];
 
     public $filters = [

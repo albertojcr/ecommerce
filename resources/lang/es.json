@@ -1,4 +1,12 @@
 {
+    "Category": "Categoría",
+    "Subcategory": "Subcategoría",
+    "Brand": "Marca",
+    "Sizes": "Tallas",
+    "Colors": "Colores",
+    "Status": "Estado",
+    "Price": "Precio",
+    "CreatedAt": "Fecha de creación",
     "Admin": "Administración",
     "White": "Blanco",
     "Blue": "Azul",
