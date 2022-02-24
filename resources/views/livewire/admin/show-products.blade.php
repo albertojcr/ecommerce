@@ -108,51 +108,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        @if($this->showColumn('name'))
+                        @foreach($this->selectedColumns as $column)
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nombre
+                                {{ __(ucfirst($column)) }}
                             </th>
-                        @endif
-                        @if($this->showColumn('category'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Categoría
-                            </th>
-                        @endif
-                        @if($this->showColumn('subcategory'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Subcategoría
-                            </th>
-                        @endif
-                        @if($this->showColumn('brand'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Marca
-                            </th>
-                        @endif
-                        @if($this->showColumn('sizes'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tallas
-                            </th>
-                        @endif
-                        @if($this->showColumn('colors'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Colores
-                            </th>
-                        @endif
-                        @if($this->showColumn('status'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Estado
-                            </th>
-                        @endif
-                        @if($this->showColumn('price'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Precio
-                            </th>
-                        @endif
-                        @if($this->showColumn('createdAt'))
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Fecha creación
-                            </th>
-                        @endif
+                        @endforeach
 
                         <th scope="col" class="relative px-6 py-3">
                             <span class="sr-only">Editar</span>
