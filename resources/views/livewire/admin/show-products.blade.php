@@ -81,9 +81,9 @@
                 <x-jet-label value="Marca" />
                 <select class="form-control w-full" wire:model="brand_id">
                     <option value="" selected disabled>Seleccione una marca</option>
-                    {{--                    @foreach ($brands as $brand)
-                                            <option value="{{$brand->id}}">{{$brand->name}}</option>
-                                        @endforeach--}}
+                        @foreach ($brands as $brand)
+                            <option value="{{$brand->id}}">{{$brand->name}}</option>
+                        @endforeach
                 </select>
             </div>
             <div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductFilter;
@@ -16,9 +17,9 @@ class ShowProducts extends Component
 
     public $search, $shownSize, $fieldToOrder;
 
-    public $categories = [], $subcategories = [];
+    public $categories = [], $subcategories = [], $brands;
 
-    public $category_id = '', $subcategory_id = '';
+    public $category_id = '', $subcategory_id = '', $brand_id = '';
 
     public $open = false, $openFilters = false;
 
@@ -32,6 +33,8 @@ class ShowProducts extends Component
     public function mount()
     {
         $this->categories = Category::all();
+
+        $this->brands = Brand::all();
 
         $this->selectedColumns = $this->columns;
     }
