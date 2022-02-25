@@ -14,7 +14,7 @@ class ShowProducts extends Component
 {
     use WithPagination;
 
-    public $search, $shownSize, $fieldToOrder = 'id';
+    public $search, $shownSize, $fieldToOrder;
 
     public $categories = [], $subcategories = [];
 
@@ -62,7 +62,9 @@ class ShowProducts extends Component
     public function render(ProductFilter $productFilter)
     {
         $products = Product::where('name', 'LIKE', "%{$this->search}%")
-            ->orderByField($productFilter, $this->fieldToOrder)
+            ->when($this->fieldToOrder, function ($query) use ($productFilter) {
+                $query->orderByField($productFilter, $this->fieldToOrder);
+            })
             ->paginate($this->filters['rowsToShow']);
 
         return view('livewire.admin.show-products', compact('products'))->layout('layouts.admin');
