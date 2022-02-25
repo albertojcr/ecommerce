@@ -22,4 +22,11 @@ class ProductFilter extends QueryFilter
         );
     }
 
+    public function orderByBrand($query)
+    {
+        return $query->orderBy(Brand::select('name')
+            ->whereColumn('brands.id', 'products.brand_id')
+        );
+    }
+
 }
