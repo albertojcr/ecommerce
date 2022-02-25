@@ -15,6 +15,9 @@
 /* Flexslider */
 @import 'flexslider/flexslider.css';
 
+/* noUiSlider */
+@import 'nouislider/dist/nouislider.min.css';
+
 /* Tailwind Custom Styles */
 @layer components {
     .container-menu {
