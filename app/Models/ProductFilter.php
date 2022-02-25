@@ -29,4 +29,12 @@ class ProductFilter extends QueryFilter
         );
     }
 
+    public function orderByColors($query)
+    {
+        return $query->orderBy(Subcategory::select('name')
+            ->whereColumn('subcategories.id', 'products.subcategory_id')
+            ->where('subcategories.color', '1'), 'DESC'
+        );
+    }
+
 }
