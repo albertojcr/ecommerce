@@ -88,6 +88,7 @@
             </div>
             <div>
                 <x-jet-label value="Precio" />
+                <div id="slider" class="w-96"></div>
             </div>
             <div>
                 <x-jet-label value="Fecha de creación" />
@@ -334,4 +335,20 @@
         @endif
     </x-table-responsive>--}}
 
+    @push('scripts')
+        <script>
+            let slider = document.getElementById('slider');
+
+            noUiSlider.create(slider, {
+                start: [1, 200],
+                animate: true,
+                tooltips: [true, true],
+                connect: true,
+                range: {
+                    'min': 1,
+                    'max': 200
+                }
+            });
+        </script>
+    @endpush
 </div>
