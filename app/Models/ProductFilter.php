@@ -37,4 +37,12 @@ class ProductFilter extends QueryFilter
         );
     }
 
+    public function orderBySizes($query)
+    {
+        return $query->orderBy(Subcategory::select('name')
+            ->whereColumn('subcategories.id', 'products.subcategory_id')
+            ->where('subcategories.size', '1'), 'DESC'
+        );
+    }
+
 }
