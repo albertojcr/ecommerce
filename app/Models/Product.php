@@ -60,4 +60,9 @@ class Product extends Model
         }
     }
 
+    public function scopeOrderByField($query, QueryFilter $filters, $field)
+    {
+        return $filters->applyOrderBy($query, $field);
+    }
+
 }

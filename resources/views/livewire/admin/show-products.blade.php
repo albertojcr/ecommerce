@@ -108,8 +108,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+
                         @foreach($this->selectedColumns as $column)
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th wire:click="$set('fieldToOrder', '{{ $column }}')" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {{ __(ucfirst($column)) }}
                             </th>
                         @endforeach
@@ -201,7 +202,7 @@
                                     {{ $product->price }} &euro;
                                 </td>
                             @endif
-                            @if($this->showColumn('createdAt'))
+                            @if($this->showColumn('created_at'))
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ $product->created_at->format('d-m-Y') }}</div>
                                 </td>

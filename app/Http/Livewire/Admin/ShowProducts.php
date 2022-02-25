@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductFilter;
 use App\Models\Size;
 use App\Models\Subcategory;
 use Livewire\Component;
@@ -13,7 +14,7 @@ class ShowProducts extends Component
 {
     use WithPagination;
 
-    public $search, $shownSize;
+    public $search, $shownSize, $fieldToOrder = 'id';
 
     public $categories = [], $subcategories = [];
 
@@ -21,7 +22,7 @@ class ShowProducts extends Component
 
     public $open = false, $openFilters = false;
 
-    public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'createdAt'];
+    public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
 
     public $filters = [
@@ -58,9 +59,10 @@ class ShowProducts extends Component
         $this->shownSize = $size;
     }
 
-    public function render()
+    public function render(ProductFilter $productFilter)
     {
         $products = Product::where('name', 'LIKE', "%{$this->search}%")
+            ->orderByField($productFilter, $this->fieldToOrder)
             ->paginate($this->filters['rowsToShow']);
 
         return view('livewire.admin.show-products', compact('products'))->layout('layouts.admin');
