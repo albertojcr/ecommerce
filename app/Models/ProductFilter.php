@@ -33,7 +33,7 @@ class ProductFilter extends QueryFilter
     {
         return $query->orderBy(Subcategory::select('name')
             ->whereColumn('subcategories.id', 'products.subcategory_id')
-            ->where('subcategories.color', '1'), 'DESC'
+            ->where('color', '1'), 'DESC'
         );
     }
 
@@ -41,7 +41,7 @@ class ProductFilter extends QueryFilter
     {
         return $query->orderBy(Subcategory::select('name')
             ->whereColumn('subcategories.id', 'products.subcategory_id')
-            ->where('subcategories.size', '1'), 'DESC'
+            ->where('size', '1'), 'DESC'
         );
     }
 
