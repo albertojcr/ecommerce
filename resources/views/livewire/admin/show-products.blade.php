@@ -1,4 +1,4 @@
-<div x-data="{ openAdvancedFilters: false }">
+<div x-data="{ openAdvancedFilters: true }">
     <x-slot name="header">
         <div class="flex items-center">
             <h2 class="font-semibold text-xl text-gray-600">
@@ -58,49 +58,71 @@
         </div>
 
         <!-- Filtros avanzados -->
-        <div class="px-6 py-4 flex gap-4 border-2 bg-indigo-50 hidden" :class="{ 'hidden': !openAdvancedFilters }">
-            <div>
-                <x-jet-label value="Categoría" />
-                <select class="form-control" wire:model="category_id">
-                    <option value="" selected disabled>Seleccione una categoría</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <x-jet-label value="Subcategoría" />
-                <select class="w-full form-control" wire:model="subcategory_id">
-                    <option value="" selected disabled>Seleccione una subcategoría</option>
-                    @foreach($subcategories as $subcategory)
-                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <x-jet-label value="Marca" />
-                <select class="form-control w-full" wire:model="brand_id">
-                    <option value="" selected disabled>Seleccione una marca</option>
+        <div class="px-6 py-8 border-2 bg-indigo-50 hidden" :class="{ 'hidden': !openAdvancedFilters }">
+            <div class="flex gap-4">
+                <div>
+                    <x-jet-label value="Categoría" />
+                    <select class="form-control" wire:model="category_id">
+                        <option value="" selected disabled>Seleccione una categoría</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <x-jet-label value="Subcategoría" />
+                    <select class="w-full form-control" wire:model="subcategory_id">
+                        <option value="" selected disabled>Seleccione una subcategoría</option>
+                        @foreach($subcategories as $subcategory)
+                            <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <x-jet-label value="Marca" />
+                    <select class="form-control w-full" wire:model="brand_id">
+                        <option value="" selected disabled>Seleccione una marca</option>
                         @foreach ($brands as $brand)
                             <option value="{{$brand->id}}">{{$brand->name}}</option>
                         @endforeach
-                </select>
+                    </select>
+                </div>
             </div>
-            <div>
-                <x-jet-label value="Precio" />
-                <div id="slider" class="w-96"></div>
+
+            <div class="flex gap-4 my-8">
+                <div>
+                    <x-jet-label value="Color" />
+                    <select class="w-full form-control" wire:model="">
+                        <option value="" selected disabled>Seleccione un color</option>
+                    </select>
+                </div>
+                <div>
+                    <x-jet-label value="Talla" />
+                    <select class="w-full form-control" wire:model="">
+                        <option value="" selected disabled>Seleccione una talla</option>
+                    </select>
+                </div>
+                <div>
+                    <x-jet-label value="Stock" />
+                    <input type="number" class="form-control" min="0" max="9999">
+                </div>
             </div>
-            <div>
-                <x-jet-label value="Fecha de creación" />
-            </div>
-            <div>
-                <x-jet-label value="Color" />
-            </div>
-            <div>
-                <x-jet-label value="Talla" />
-            </div>
-            <div>
-                <x-jet-label value="Stock" />
+
+            <div class="flex gap-4">
+                <div class="flex justify-between gap-4">
+                    <div>
+                        <x-jet-label value="Desde" />
+                        <input type="date" class="form-control">
+                    </div>
+                    <div>
+                        <x-jet-label value="Hasta" />
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="ml-8 flex flex-col">
+                    <x-jet-label value="Precio" />
+                    <div id="slider" class="w-96 mt-3"></div>
+                </div>
             </div>
 
         </div>
