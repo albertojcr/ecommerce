@@ -18,6 +18,10 @@
 /* noUiSlider */
 @import 'nouislider/dist/nouislider.min.css';
 
+.noUi-horizontal .noUi-tooltip {
+    bottom: unset;
+}
+
 /* Tailwind Custom Styles */
 @layer components {
     .container-menu {
