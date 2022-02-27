@@ -15,13 +15,11 @@ class ShowProducts extends Component
 {
     use WithPagination;
 
-    public $search, $shownSize, $fieldToOrder;
+    public $search, $fieldToOrder;
 
     public $categories = [], $subcategories = [], $brands;
 
     public $category_id = '', $subcategory_id = '', $brand_id = '';
-
-    public $open = false, $openFilters = false;
 
     public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
@@ -36,7 +34,7 @@ class ShowProducts extends Component
 
         $this->brands = Brand::all();
 
-        $this->selectedColumns = $this->columns;
+        $this->selectedColumns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status'];
     }
 
     public function showColumn($column)
@@ -53,13 +51,6 @@ class ShowProducts extends Component
     public function updatingSearch()
     {
         $this->resetPage();
-    }
-
-    public function showSizeInfo(Size $size)
-    {
-        $this->open = true;
-
-        $this->shownSize = $size;
     }
 
     public function render(ProductFilter $productFilter)
