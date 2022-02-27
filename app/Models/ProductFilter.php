@@ -13,7 +13,7 @@ class ProductFilter extends QueryFilter
             'category_id' => 'filled|integer|exists:categories,id',
             'subcategory_id' => 'filled|integer|exists:subcategories,id',
             'brand_id' => 'filled|integer|exists:brands,id',
-            'status' => '',
+            'status' => 'in:any,1,2',
             'from' => 'date_format:Y-m-d',
             'to' => 'date_format:Y-m-d',
             'price' => 'min:1|max:200'
