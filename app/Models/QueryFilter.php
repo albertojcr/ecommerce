@@ -20,6 +20,7 @@ abstract class QueryFilter
         $this->valid = $validator->valid();
 
         foreach ($this->valid as $name => $value) {
+
             $this->applyFilters($query, $name, $value);
         }
 

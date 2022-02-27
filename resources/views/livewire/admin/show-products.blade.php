@@ -112,11 +112,11 @@
                 <div class="flex justify-between gap-4">
                     <div>
                         <x-jet-label value="Desde" />
-                        <input type="date" class="form-control">
+                        <input wire:model="filters.from" type="date" class="form-control" max="{{ $filters['to'] }}">
                     </div>
                     <div>
                         <x-jet-label value="Hasta" />
-                        <input type="date" class="form-control">
+                        <input wire:model="filters.to" type="date" class="form-control" min="{{ $filters['from'] }}">
                     </div>
                 </div>
                 <div class="ml-8 flex flex-col">

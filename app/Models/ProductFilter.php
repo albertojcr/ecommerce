@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProductFilter extends QueryFilter
@@ -12,12 +13,28 @@ class ProductFilter extends QueryFilter
             'category_id' => 'filled|integer|exists:categories,id',
             'subcategory_id' => 'filled|integer|exists:subcategories,id',
             'brand_id' => 'filled|integer|exists:brands,id',
+            'from' => 'date_format:Y-m-d',
+            'to' => 'date_format:Y-m-d',
         ];
     }
 
     public function filterByCategoryId($query, $categoryId)
     {
         return $query->whereRelation('subcategory.category', 'id', $categoryId);
+    }
+
+    public function filterByFrom($query, $date)
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $date);
+
+        $query->whereDate('created_at', '>=', $date);
+    }
+
+    public function filterByTo($query, $date)
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $date);
+
+        $query->whereDate('created_at', '<=', $date);
     }
 
     public function orderByCategory($query)

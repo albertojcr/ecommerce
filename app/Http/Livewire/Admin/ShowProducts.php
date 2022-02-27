@@ -26,6 +26,8 @@ class ShowProducts extends Component
         'category_id' => '',
         'subcategory_id' => '',
         'brand_id' => '',
+        'from' => null,
+        'to' => null,
     ];
 
     public function mount()
