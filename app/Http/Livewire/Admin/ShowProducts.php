@@ -15,7 +15,7 @@ class ShowProducts extends Component
 {
     use WithPagination;
 
-    public $search, $fieldToOrder;
+    public $search, $rowsPerPage = 10, $fieldToOrder;
 
     public $categories = [], $subcategories = [], $brands;
 
@@ -25,7 +25,7 @@ class ShowProducts extends Component
     public $selectedColumns = [];
 
     public $filters = [
-        'rowsToShow' => '10'
+
     ];
 
     public function mount()
@@ -59,7 +59,7 @@ class ShowProducts extends Component
             ->when($this->fieldToOrder, function ($query) use ($productFilter) {
                 $query->orderByField($productFilter, $this->fieldToOrder);
             })
-            ->paginate($this->filters['rowsToShow']);
+            ->paginate($this->rowsPerPage);
 
         return view('livewire.admin.show-products', compact('products'))->layout('layouts.admin');
     }
