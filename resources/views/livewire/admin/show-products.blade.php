@@ -106,9 +106,24 @@
                 </div>
                 <div>
                     <x-jet-label value="Talla" />
-                    <select class="w-full form-control" wire:model="">
-                        <option value="" selected disabled>Seleccione una talla</option>
-                    </select>
+
+                    <x-jet-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <div class="bg-white py-2 px-4 border border-gray-300 rounded-md cursor-default">
+                                Seleccione tallas
+                            </div>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            @foreach($sizes as $size)
+                                <div class="block px-4 py-2 text-sm">
+                                    <input type="checkbox" wire:model="filters.sizes" value="{{ $size }}">
+                                    <label>{{ $size }}</label>
+                                </div>
+                            @endforeach
+                        </x-slot>
+                    </x-jet-dropdown>
+
                 </div>
                 <div>
                     <x-jet-label value="Stock" />
