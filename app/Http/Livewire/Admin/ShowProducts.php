@@ -26,6 +26,7 @@ class ShowProducts extends Component
         'category_id' => '',
         'subcategory_id' => '',
         'brand_id' => '',
+        'status',
         'from' => null,
         'to' => null,
         'price',

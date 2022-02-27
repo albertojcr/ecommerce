@@ -87,6 +87,14 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <x-jet-label value="Estado" />
+                    <select class="form-control w-full" wire:model="filters.status">
+                        <option value="any" selected>Cualquiera</option>
+                        <option value="1" selected>Borrador</option>
+                        <option value="2" selected>Publicado</option>
+                    </select>
+                </div>
             </div>
 
             <div class="flex gap-4 my-8">

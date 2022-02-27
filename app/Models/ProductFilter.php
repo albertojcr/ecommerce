@@ -13,6 +13,7 @@ class ProductFilter extends QueryFilter
             'category_id' => 'filled|integer|exists:categories,id',
             'subcategory_id' => 'filled|integer|exists:subcategories,id',
             'brand_id' => 'filled|integer|exists:brands,id',
+            'status' => '',
             'from' => 'date_format:Y-m-d',
             'to' => 'date_format:Y-m-d',
             'price' => 'min:1|max:200'
@@ -22,6 +23,15 @@ class ProductFilter extends QueryFilter
     public function filterByCategoryId($query, $categoryId)
     {
         return $query->whereRelation('subcategory.category', 'id', $categoryId);
+    }
+
+    public function filterByStatus($query, $status)
+    {
+        if ($status === 'any') {
+            $query->whereIn('status', [1, 2]);
+        } else {
+            $query->where('status', $status);
+        }
     }
 
     public function filterByFrom($query, $date)
