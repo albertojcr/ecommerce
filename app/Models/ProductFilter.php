@@ -10,6 +10,7 @@ class ProductFilter extends QueryFilter
     {
         return [
             'category_id' => 'filled|integer|exists:categories,id',
+            'subcategory_id' => 'filled|integer|exists:subcategories,id',
         ];
     }
 
