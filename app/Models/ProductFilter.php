@@ -6,6 +6,18 @@ use Illuminate\Support\Facades\DB;
 
 class ProductFilter extends QueryFilter
 {
+    public function rules(): array
+    {
+        return [
+            'category_id' => 'filled|integer|exists:categories,id',
+        ];
+    }
+
+    public function filterByCategoryId($query, $categoryId)
+    {
+        return $query->whereRelation('subcategory.category', 'id', $categoryId);
+    }
+
     public function orderByCategory($query)
     {
         return $query->orderBy(DB::table('categories AS c')
