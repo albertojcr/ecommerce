@@ -17,15 +17,15 @@ class ShowProducts extends Component
 
     public $search, $rowsPerPage = 10, $fieldToOrder;
 
-    public $categories = [], $subcategories = [], $brands;
-
-    public $category_id = '', $subcategory_id = '', $brand_id = '';
-
     public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
 
-    public $filters = [
+    public $categories = [], $subcategories = [], $brands;
 
+    public $filters = [
+        'category_id' => '',
+        'subcategory_id' => '',
+        'brand_id' => '',
     ];
 
     public function mount()
@@ -42,10 +42,10 @@ class ShowProducts extends Component
         return in_array($column, $this->selectedColumns);
     }
 
-    public function updatedCategoryId($value)
+    public function updatedFiltersCategoryId($value)
     {
         $this->subcategories = Subcategory::where('category_id', $value)->get();
-        $this->subcategory_id = '';
+        $this->filters['subcategory_id'] = '';
     }
 
     public function updatingSearch()
