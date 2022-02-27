@@ -28,6 +28,7 @@ class ShowProducts extends Component
         'brand_id' => '',
         'from' => null,
         'to' => null,
+        'price',
     ];
 
     public function mount()

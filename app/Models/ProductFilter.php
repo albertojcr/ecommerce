@@ -15,6 +15,7 @@ class ProductFilter extends QueryFilter
             'brand_id' => 'filled|integer|exists:brands,id',
             'from' => 'date_format:Y-m-d',
             'to' => 'date_format:Y-m-d',
+            'price' => 'min:1|max:200'
         ];
     }
 
@@ -35,6 +36,11 @@ class ProductFilter extends QueryFilter
         $date = Carbon::createFromFormat('Y-m-d', $date);
 
         $query->whereDate('created_at', '<=', $date);
+    }
+
+    public function filterByPrice($query, $price)
+    {
+        $query->whereBetween('price', $price);
     }
 
     public function orderByCategory($query)

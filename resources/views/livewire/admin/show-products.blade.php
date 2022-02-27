@@ -121,7 +121,7 @@
                 </div>
                 <div class="ml-8 flex flex-col">
                     <x-jet-label value="Precio" />
-                    <div id="slider" class="w-96 mt-3"></div>
+                    <div wire:ignore id="slider" class="w-96 mt-3"></div>
                 </div>
             </div>
 
@@ -345,6 +345,10 @@
                     'min': 1,
                     'max': 200
                 }
+            });
+
+            slider.noUiSlider.on('update', function (values) {
+                @this.set('filters.price', values);
             });
         </script>
     @endpush
