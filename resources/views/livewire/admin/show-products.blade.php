@@ -100,9 +100,23 @@
             <div class="flex gap-4 my-8">
                 <div>
                     <x-jet-label value="Color" />
-                    <select class="w-full form-control" wire:model="">
-                        <option value="" selected disabled>Seleccione un color</option>
-                    </select>
+
+                    <x-jet-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <div class="bg-white py-2 px-4 border border-gray-300 rounded-md cursor-default">
+                                Seleccione colores
+                            </div>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            @foreach($colors as $color)
+                                <div class="block px-4 py-2 text-sm">
+                                    <input type="checkbox" wire:model="filters.colors" value="{{ $color->id }}">
+                                    <label>{{ __(ucfirst($color->name)) }}</label>
+                                </div>
+                            @endforeach
+                        </x-slot>
+                    </x-jet-dropdown>
                 </div>
                 <div>
                     <x-jet-label value="Talla" />
@@ -123,7 +137,6 @@
                             @endforeach
                         </x-slot>
                     </x-jet-dropdown>
-
                 </div>
                 <div>
                     <x-jet-label value="Stock" />

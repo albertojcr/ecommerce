@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductFilter;
 use App\Models\Size;
@@ -21,13 +22,14 @@ class ShowProducts extends Component
     public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
 
-    public $categories, $subcategories, $brands, $sizes;
+    public $categories, $subcategories, $brands, $colors, $sizes;
 
     public $filters = [
         'category_id' => '',
         'subcategory_id' => '',
         'brand_id' => '',
         'status',
+        'colors' => [],
         'sizes' => [],
         'from' => null,
         'to' => null,
@@ -41,6 +43,8 @@ class ShowProducts extends Component
         $this->subcategories = Subcategory::all();
 
         $this->brands = Brand::all();
+
+        $this->colors = Color::all();
 
         $this->sizes = Size::selectRaw('DISTINCT name')->pluck('name');
 

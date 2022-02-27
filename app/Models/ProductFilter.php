@@ -14,6 +14,7 @@ class ProductFilter extends QueryFilter
             'subcategory_id' => 'filled|integer|exists:subcategories,id',
             'brand_id' => 'filled|integer|exists:brands,id',
             'status' => 'in:any,1,2',
+            'colors' => 'array|exists:colors,id',
             'sizes' => 'array|exists:sizes,name',
             'from' => 'date_format:Y-m-d',
             'to' => 'date_format:Y-m-d',
@@ -32,6 +33,14 @@ class ProductFilter extends QueryFilter
             $query->whereIn('status', [1, 2]);
         } else {
             $query->where('status', $status);
+        }
+    }
+
+    public function filterByColors($query, $colors)
+    {
+        foreach ($colors as $colorId) {
+            $query->whereRelation('colors', 'color_id', $colorId)
+                ->orWhereRelation('sizes.colors', 'color_id', $colorId);
         }
     }
 
