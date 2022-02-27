@@ -56,6 +56,7 @@ class ShowProducts extends Component
     public function render(ProductFilter $productFilter)
     {
         $products = Product::where('name', 'LIKE', "%{$this->search}%")
+            ->filterBy($productFilter, $this->filters)
             ->when($this->fieldToOrder, function ($query) use ($productFilter) {
                 $query->orderByField($productFilter, $this->fieldToOrder);
             })

@@ -65,4 +65,8 @@ class Product extends Model
         return $filters->applyOrderBy($query, $field);
     }
 
+    public function scopeFilterBy($query, QueryFilter $filters, array $data)
+    {
+        return $filters->applyTo($query, $data);
+    }
 }
