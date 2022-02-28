@@ -58,7 +58,14 @@
         </div>
 
         <!-- Filtros avanzados -->
-        <div class="px-6 py-8 border-2 bg-indigo-50 hidden" :class="{ 'hidden': !openAdvancedFilters }">
+        <div class="px-6 pt-8 pb-14 border-2 bg-indigo-50 hidden" :class="{ 'hidden': !openAdvancedFilters }">
+            <div class="flex justify-end">
+                <a class="text-sm cursor-pointer hover:underline inline-block"
+                   wire:click="clearFilters">
+                    <i class="fa-solid fa-broom"></i>
+                    Limpiar filtros
+                </a>
+            </div>
             <div class="flex gap-4">
                 <div>
                     <x-jet-label value="Categoría" />

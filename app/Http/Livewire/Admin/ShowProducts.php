@@ -57,6 +57,11 @@ class ShowProducts extends Component
         return in_array($column, $this->selectedColumns);
     }
 
+    public function clearFilters()
+    {
+        $this->reset('filters');
+    }
+
     public function render(ProductFilter $productFilter)
     {
         $products = Product::where('name', 'LIKE', "%{$this->search}%")
