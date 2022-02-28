@@ -39,24 +39,30 @@ class ProductFilter extends QueryFilter
 
     public function filterByColors($query, $colors)
     {
-        foreach ($colors as $colorId) {
-            $query->whereRelation('colors', 'color_id', $colorId)
-                ->orWhereRelation('sizes.colors', 'color_id', $colorId);
-        }
+        $query->where(function ($query) use ($colors) {
+            foreach ($colors as $colorId) {
+                $query->whereRelation('colors', 'color_id', $colorId)
+                    ->orWhereRelation('sizes.colors', 'color_id', $colorId);
+            }
+        });
     }
 
     public function filterBySizes($query, $sizes)
     {
-        foreach ($sizes as $size) {
-            $query->whereRelation('sizes', 'name', $size);
-        }
+        $query->where(function ($query) use ($sizes) {
+            foreach ($sizes as $size) {
+                $query->whereRelation('sizes', 'name', $size);
+            }
+        });
     }
 
     public function filterByStock($query, $stock)
     {
-        $query->where('quantity', '>=', $stock)
-            ->orWhereRelation('colors', 'quantity', '>=', $stock)
-            ->orWhereRelation('sizes.colors', 'quantity', '>=', $stock);
+        $query->where(function ($query) use ($stock) {
+            $query->where('quantity', '>=', $stock)
+                ->orWhereRelation('colors', 'quantity', '>=', $stock)
+                ->orWhereRelation('sizes.colors', 'quantity', '>=', $stock);
+        });
     }
 
     public function filterByFrom($query, $date)
