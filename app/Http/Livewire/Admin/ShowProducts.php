@@ -31,6 +31,7 @@ class ShowProducts extends Component
         'status',
         'colors' => [],
         'sizes' => [],
+        'stock',
         'from' => null,
         'to' => null,
         'price',

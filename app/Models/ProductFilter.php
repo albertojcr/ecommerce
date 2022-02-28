@@ -16,6 +16,7 @@ class ProductFilter extends QueryFilter
             'status' => 'in:any,1,2',
             'colors' => 'array|exists:colors,id',
             'sizes' => 'array|exists:sizes,name',
+            'stock' => 'integer|min:1|max:9999',
             'from' => 'date_format:Y-m-d',
             'to' => 'date_format:Y-m-d',
             'price' => 'min:1|max:200'
@@ -49,6 +50,13 @@ class ProductFilter extends QueryFilter
         foreach ($sizes as $size) {
             $query->whereRelation('sizes', 'name', $size);
         }
+    }
+
+    public function filterByStock($query, $stock)
+    {
+        $query->where('quantity', '>=', $stock)
+            ->orWhereRelation('colors', 'quantity', '>=', $stock)
+            ->orWhereRelation('sizes.colors', 'quantity', '>=', $stock);
     }
 
     public function filterByFrom($query, $date)

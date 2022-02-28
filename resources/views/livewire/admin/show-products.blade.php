@@ -140,7 +140,7 @@
                 </div>
                 <div>
                     <x-jet-label value="Stock" />
-                    <input type="number" class="form-control" min="0" max="9999">
+                    <input wire:model="filters.stock" type="number" class="form-control" min="1" max="9999">
                 </div>
             </div>
 
