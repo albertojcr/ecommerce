@@ -176,8 +176,13 @@
                     <tr>
 
                         @foreach($this->selectedColumns as $column)
-                            <th wire:click="$set('fieldToOrder', '{{ $column }}')" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th wire:click="$set('fieldToOrder', '{{ $column }}')" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
                                 {{ __(ucfirst($column)) }}
+
+                                <span class="float-right text-gray-900">
+                                    <i class="fa-solid fa-arrow-up {{ $fieldToOrder === $column && $sortDirection === 'ASC' ? '' : 'text-gray-400' }}"></i>
+                                    <i class="fa-solid fa-arrow-down {{ $fieldToOrder === $column && $sortDirection === 'DESC' ? '' : 'text-gray-400' }}"></i>
+                                </span>
                             </th>
                         @endforeach
 

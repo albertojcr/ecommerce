@@ -115,42 +115,42 @@ class ProductFilter extends QueryFilter
         $query->whereBetween('price', $price);
     }
 
-    public function orderByCategory($query)
+    public function orderByCategory($query, $direction)
     {
         return $query->orderBy(DB::table('categories AS c')
             ->selectRaw('c.name')
             ->join('subcategories', 'c.id', '=', 'subcategories.category_id')
-            ->whereColumn('subcategories.id', 'products.subcategory_id')
+            ->whereColumn('subcategories.id', 'products.subcategory_id'), $direction
         );
     }
 
-    public function orderBySubcategory($query)
+    public function orderBySubcategory($query, $direction)
     {
         return $query->orderBy(Subcategory::select('name')
-            ->whereColumn('subcategories.id', 'products.subcategory_id')
+            ->whereColumn('subcategories.id', 'products.subcategory_id'), $direction
         );
     }
 
-    public function orderByBrand($query)
+    public function orderByBrand($query, $direction)
     {
         return $query->orderBy(Brand::select('name')
-            ->whereColumn('brands.id', 'products.brand_id')
+            ->whereColumn('brands.id', 'products.brand_id'), $direction
         );
     }
 
-    public function orderByColors($query)
+    public function orderByColors($query, $direction)
     {
         return $query->orderBy(Subcategory::select('name')
             ->whereColumn('subcategories.id', 'products.subcategory_id')
-            ->where('color', '1'), 'DESC'
+            ->where('color', '1'), $direction
         );
     }
 
-    public function orderBySizes($query)
+    public function orderBySizes($query, $direction)
     {
         return $query->orderBy(Subcategory::select('name')
             ->whereColumn('subcategories.id', 'products.subcategory_id')
-            ->where('size', '1'), 'DESC'
+            ->where('size', '1'), $direction
         );
     }
 

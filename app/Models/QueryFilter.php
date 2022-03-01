@@ -38,14 +38,14 @@ abstract class QueryFilter
         }
     }
 
-    public function applyOrderBy($query, $field): void
+    public function applyOrderBy($query, $field, $direction): void
     {
         $method = 'orderBy' . ucfirst($field);
 
         if (method_exists($this, $method)) {
-            $this->$method($query, $field);
+            $this->$method($query, $direction);
         } else {
-            $query->orderBy($field, 'ASC');
+            $query->orderBy($field, $direction);
         }
     }
 
