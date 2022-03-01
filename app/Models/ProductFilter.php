@@ -58,10 +58,35 @@ class ProductFilter extends QueryFilter
 
     public function filterByStock($query, $stock)
     {
-        $query->where(function ($query) use ($stock) {
+        // Consulta anterior que no filtra por stock total
+        /*$query->where(function ($query) use ($stock) {
             $query->where('quantity', '>=', $stock)
                 ->orWhereRelation('colors', 'quantity', '>=', $stock)
                 ->orWhereRelation('sizes.colors', 'quantity', '>=', $stock);
+        });*/
+
+        $query->where(function ($query) use ($stock) {
+            $query->where('quantity', '>=', $stock)
+
+                ->orWhereHas('colors', function ($query) use ($stock) {
+                    $query->where(function ($query) use ($stock) {
+                        $query->selectRaw('SUM(quantity)')
+                            ->from('color_product AS cp2')
+                            ->whereColumn('color_product.product_id', 'cp2.product_id');
+                    }, '>=', $stock);
+                })
+
+                ->orWhereHas('sizes.colors', function ($query) use ($stock) {
+                    $query->where(function ($query) use ($stock) {
+                        $query->selectRaw('SUM(quantity)')
+                            ->from('color_size AS cs2')
+                            ->whereIn('cs2.size_id', function ($query) {
+                                $query->select('id')
+                                    ->from('sizes AS s2')
+                                    ->whereColumn('s2.product_id', 'products.id');
+                            });
+                    }, '>=', $stock);
+                });
         });
     }
 
