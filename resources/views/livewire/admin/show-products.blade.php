@@ -265,7 +265,7 @@
                             @endif
                             @if($this->showColumn('status'))
                                 <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $product->status == 1 ? 'red' : 'green' }}-100 text-{{ $product->status == 1 ? 'red' : 'green' }}-800">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $product->status == 1 ? 'bg-red-100' : 'bg-green-100' }} {{ $product->status == 1 ? 'text-red-800' : 'text-green-800' }}">
                                 {{ $product->status == 1 ? 'Borrador' : 'Publicado' }}
                             </span>
                                 </td>
