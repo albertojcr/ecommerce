@@ -253,6 +253,11 @@
 
                                 </td>
                             @endif
+                            @if($this->showColumn('stock'))
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    {{ $product->stock }}
+                                </td>
+                            @endif
                             @if($this->showColumn('status'))
                                 <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $product->status == 1 ? 'red' : 'green' }}-100 text-{{ $product->status == 1 ? 'red' : 'green' }}-800">

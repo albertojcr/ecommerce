@@ -9,7 +9,6 @@ use App\Models\Product;
 use App\Models\ProductFilter;
 use App\Models\Size;
 use App\Models\Subcategory;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,7 +18,7 @@ class ShowProducts extends Component
 
     public $search, $rowsPerPage = 10, $fieldToOrder;
 
-    public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status', 'price', 'created_at'];
+    public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
 
     public $categories, $subcategories, $brands, $colors, $sizes;
@@ -49,7 +48,7 @@ class ShowProducts extends Component
 
         $this->sizes = Size::selectRaw('DISTINCT name')->pluck('name');
 
-        $this->selectedColumns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'status'];
+        $this->selectedColumns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status'];
     }
 
     public function showColumn($column)
