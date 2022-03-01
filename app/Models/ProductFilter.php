@@ -138,6 +138,14 @@ class ProductFilter extends QueryFilter
         );
     }
 
+    public function orderBySizes($query, $direction)
+    {
+        return $query->orderBy(Subcategory::select('name')
+            ->whereColumn('subcategories.id', 'products.subcategory_id')
+            ->where('size', '1'), $direction
+        );
+    }
+
     public function orderByColors($query, $direction)
     {
         return $query->orderBy(Subcategory::select('name')
@@ -146,12 +154,21 @@ class ProductFilter extends QueryFilter
         );
     }
 
-    public function orderBySizes($query, $direction)
+    public function orderByStock($query, $direction)
     {
-        return $query->orderBy(Subcategory::select('name')
-            ->whereColumn('subcategories.id', 'products.subcategory_id')
-            ->where('size', '1'), $direction
-        );
+        return $query->orderBy(ColorSize::selectRaw('SUM(quantity)')
+            ->from('color_size')
+            ->whereIn('color_size.size_id', function ($query) {
+                $query->select('id')
+                    ->from('sizes')
+                    ->whereColumn('sizes.product_id', 'products.id');
+            }), $direction)
+
+            ->orderBy(ColorProduct::selectRaw('SUM(quantity)')
+                ->from('color_product')
+                ->whereColumn('color_product.product_id', 'products.id'), $direction)
+
+            ->orderBy('quantity', $direction);
     }
 
 }
