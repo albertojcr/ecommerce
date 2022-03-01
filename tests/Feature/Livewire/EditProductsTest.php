@@ -60,7 +60,25 @@ class EditProductsTest extends TestCase
     /** @test */
     public function it_deletes_a_simple_product()
     {
+        $category = $this->createCategory();
+        $subcategory = $this->createSubcategory($category->id);
+        $brand = $this->createBrand($category->id);
 
+        $product = $this->createProduct($subcategory->id, $brand->id);
+
+        $user = $this->createAdminUser();
+
+        $this->actingAs($user);
+
+        $this->assertDatabaseCount('products', 1);
+        $this->assertDatabaseCount('images', 4);
+
+        Livewire::test(EditProduct::class, [
+            'product' => $product
+        ])->call('delete');
+
+        $this->assertDatabaseCount('products', 0);
+        $this->assertDatabaseCount('images', 0);
     }
 
     /** @test  */
