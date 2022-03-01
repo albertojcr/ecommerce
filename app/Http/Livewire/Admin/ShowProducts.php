@@ -75,6 +75,10 @@ class ShowProducts extends Component
         return $this->sortDirection === 'ASC' ? 'DESC': 'ASC';
     }
 
+    public function updatedFilters() {
+        $this->resetPage();
+    }
+
     public function clearFilters()
     {
         $this->reset('filters');
