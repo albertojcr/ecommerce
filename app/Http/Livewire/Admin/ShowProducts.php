@@ -82,6 +82,8 @@ class ShowProducts extends Component
     public function clearFilters()
     {
         $this->reset('filters');
+
+        $this->resetPage();
     }
 
     public function render(ProductFilter $productFilter)
