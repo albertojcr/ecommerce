@@ -40,7 +40,7 @@ class ShowProductsTest extends DuskTestCase
         $brand = $this->createBrand($category->id);
         $product = $this->createProduct($subcategory->id, $brand->id);
 
-        $this->browse(function (Browser $browser) use ($category, $subcategory, $product) {
+        $this->browse(function (Browser $browser) use ($category, $product, $brand) {
             $browser->visit('/')
                 ->click('@show-category-' . $category->id)
                 ->click('@view-product-' . $product->id)
@@ -49,9 +49,10 @@ class ShowProductsTest extends DuskTestCase
                 ->assertAttribute('@product-image-' . $product->images->find(2)->id, 'src', '/storage/' . $product->images->find(2)->url)
                 ->assertAttribute('@product-image-' . $product->images->find(3)->id, 'src', '/storage/' . $product->images->find(3)->url)
                 ->assertAttribute('@product-image-' . $product->images->find(4)->id, 'src', '/storage/' . $product->images->find(4)->url)
-                //->assertSee($product->description)
                 ->assertSee($product->name)
+                ->assertSee(Str::title($brand->name))
                 ->assertSee($product->price)
+                ->assertSee($product->description)
                 ->assertSee('Stock disponible: ' . $product->quantity)
                 ->assertSeeIn('@decrease-quantity-btn', '-')
                 ->assertSeeIn('@increase-quantity-btn', '+')
@@ -74,7 +75,7 @@ class ShowProductsTest extends DuskTestCase
 
         $productQuantity = $product->colors->first()->pivot->quantity;
 
-        $this->browse(function (Browser $browser) use ($category, $subcategory, $product, $productQuantity, $colorA, $colorB) {
+        $this->browse(function (Browser $browser) use ($category, $product, $brand, $productQuantity, $colorA, $colorB) {
             $browser->visit('/')
                 ->click('@show-category-' . $category->id)
                 ->click('@view-product-' . $product->id)
@@ -84,12 +85,15 @@ class ShowProductsTest extends DuskTestCase
                 ->assertAttribute('@product-image-' . $product->images->find(3)->id, 'src', '/storage/' . $product->images->find(3)->url)
                 ->assertAttribute('@product-image-' . $product->images->find(4)->id, 'src', '/storage/' . $product->images->find(4)->url)
                 ->assertSee($product->name)
+                ->assertSee(Str::title($brand->name))
                 ->assertSee($product->price)
+                ->assertSee($product->description)
                 ->pause(2000)
                 ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
                 ->select('@color-dropdown', $colorA->id)
                 ->assertSelected('@color-dropdown', $colorA->id)
-                //->assertSee($productQuantity)
+                ->pause(1000)
+                ->assertSee('Stock disponible: ' . $productQuantity)
                 ->assertSeeIn('@decrease-quantity-btn', '-')
                 ->assertSeeIn('@increase-quantity-btn', '+')
                 ->assertPresent('@add-to-cart-btn')
@@ -114,7 +118,7 @@ class ShowProductsTest extends DuskTestCase
 
         $productQuantity = $product->sizes->find($sizeA->id)->colors->find($colorA->id)->pivot->quantity;
 
-        $this->browse(function (Browser $browser) use ($category, $subcategory, $product, $productQuantity, $colorA, $colorB, $sizeA, $sizeB) {
+        $this->browse(function (Browser $browser) use ($category, $product, $brand, $productQuantity, $colorA, $colorB, $sizeA, $sizeB) {
             $browser->visit('/')
                 ->click('@show-category-' . $category->id)
                 ->click('@view-product-' . $product->id)
@@ -124,7 +128,9 @@ class ShowProductsTest extends DuskTestCase
                 ->assertAttribute('@product-image-' . $product->images->find(3)->id, 'src', '/storage/' . $product->images->find(3)->url)
                 ->assertAttribute('@product-image-' . $product->images->find(4)->id, 'src', '/storage/' . $product->images->find(4)->url)
                 ->assertSee($product->name)
+                ->assertSee(Str::title($brand->name))
                 ->assertSee($product->price)
+                ->assertSee($product->description)
                 ->pause(2000)
                 ->assertSelectHasOptions('@size-dropdown', [$sizeA->id, $sizeB->id])
                 ->select('@size-dropdown', $sizeA->id)
@@ -133,7 +139,8 @@ class ShowProductsTest extends DuskTestCase
                 ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
                 ->select('@color-dropdown', $colorA->id)
                 ->assertSelected('@color-dropdown', $colorA->id)
-                //->assertSee($productQuantity)
+                ->pause(1000)
+                ->assertSee('Stock disponible: ' . $productQuantity)
                 ->assertSeeIn('@decrease-quantity-btn', '-')
                 ->assertSeeIn('@increase-quantity-btn', '+')
                 ->assertPresent('@add-to-cart-btn')
