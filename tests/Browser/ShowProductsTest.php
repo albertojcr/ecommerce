@@ -129,6 +129,7 @@ class ShowProductsTest extends DuskTestCase
                 ->assertSelectHasOptions('@size-dropdown', [$sizeA->id, $sizeB->id])
                 ->select('@size-dropdown', $sizeA->id)
                 ->assertSelected('@size-dropdown', $sizeA->id)
+                ->pause(1000)
                 ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
                 ->select('@color-dropdown', $colorA->id)
                 ->assertSelected('@color-dropdown', $colorA->id)
@@ -298,6 +299,7 @@ class ShowProductsTest extends DuskTestCase
             $browser->visitRoute('products.show', $product)
                 ->select('@size-dropdown', $size->id)
                 ->assertSelected('@size-dropdown', $size->id)
+                ->pause(1000)
                 ->select('@color-dropdown', $color->id)
                 ->assertSelected('@color-dropdown', $color->id)
                 ->waitForTextIn('@available-stock', $quantity)
@@ -338,8 +340,10 @@ class ShowProductsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($product, $colorA, $colorB) {
             $browser->visitRoute('products.show', $product)
                 ->assertSelectHasOptions('@color-dropdown', [$colorA->id, $colorB->id])
+                ->pause(1000)
                 ->select('@color-dropdown', $colorA->id)
                 ->assertSelected('@color-dropdown', $colorA->id)
+                ->pause(1000)
                 ->assertButtonEnabled('@add-to-cart-btn')
                 ->press('@add-to-cart-btn')
                 ->waitForTextIn('@cart-products-count-icon', '1')
@@ -366,9 +370,11 @@ class ShowProductsTest extends DuskTestCase
                 ->assertSelectHasOptions('@size-dropdown', [$size->id])
                 ->select('@size-dropdown', $size->id)
                 ->assertSelected('@size-dropdown', $size->id)
+                ->pause(1000)
                 ->assertSelectHasOptions('@color-dropdown', [$color->id])
                 ->select('@color-dropdown', $color->id)
                 ->assertSelected('@color-dropdown', $color->id)
+                ->pause(1000)
                 ->assertButtonEnabled('@add-to-cart-btn')
                 ->press('@add-to-cart-btn')
                 ->waitForTextIn('@cart-products-count-icon', '1')
@@ -416,7 +422,8 @@ class ShowProductsTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($product, $color, $quantity) {
             $browser->visitRoute('products.show', $product)
-                ->select('@color-dropdown', $color->id);
+                ->select('@color-dropdown', $color->id)
+                ->pause(1000);
 
             for ($i = 1; $i < $quantity; $i++) {
                 $browser->press('@increase-quantity-btn')
@@ -529,10 +536,13 @@ class ShowProductsTest extends DuskTestCase
             $browser->visitRoute('products.show', $product)
                 ->select('@size-dropdown', $size->id)
                 ->assertSelected('@size-dropdown', $size->id)
+                ->pause(1000)
                 ->select('@color-dropdown', $color->id)
                 ->assertSelected('@color-dropdown', $color->id)
+                ->pause(1000)
                 ->assertSeeIn('@available-stock', $initialStock)
                 ->press('@add-to-cart-btn')
+                ->pause(1000)
                 ->waitForTextIn('@available-stock', $initialStock - 1)
                 ->screenshot('show-products/stock-of-size-product-changes-when-adding-to-cart');
         });

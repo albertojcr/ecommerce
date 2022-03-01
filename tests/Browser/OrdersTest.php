@@ -328,6 +328,7 @@ class OrdersTest extends DuskTestCase
                 ->visitRoute('products.show', $product)
                 ->select('@size-dropdown', $size->id)
                 ->assertSelected('@size-dropdown', $size->id)
+                ->pause(1000)
                 ->select('@color-dropdown', $color->id)
                 ->assertSelected('@color-dropdown', $color->id)
                 ->press('@add-to-cart-btn')
@@ -336,6 +337,7 @@ class OrdersTest extends DuskTestCase
                 ->type('@contact-name', 'Nombre')
                 ->type('@contact-phone', '657485734')
                 ->radio('envio_type', 1)
+                ->pause(1000)
                 ->press('@create-order')
                 ->screenshot('orders/stock-of-size-product-updates-in-db-when-creating-order');
         });
