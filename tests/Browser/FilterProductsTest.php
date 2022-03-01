@@ -13,7 +13,7 @@ class FilterProductsTest extends DuskTestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function it_filters_products_by_subcategory()
+    public function it_filters_products_by_subcategory_in_the_show_category_details_view()
     {
         $category = $this->createCategory();
 
@@ -36,12 +36,12 @@ class FilterProductsTest extends DuskTestCase
                 ->assertSee(Str::limit($productB->name, 20))
                 ->assertDontSee(Str::limit($productC->name, 20))
                 ->assertDontSee(Str::limit($productD->name, 20))
-                ->screenshot('filter-products-by-subcategory');
+                ->screenshot('filter-products/filter-products-by-subcategory');
         });
     }
 
     /** @test */
-    public function it_filters_products_by_brand()
+    public function it_filters_products_by_brand_in_the_show_category_details_view()
     {
         $category = $this->createCategory();
 
@@ -64,7 +64,7 @@ class FilterProductsTest extends DuskTestCase
                 ->assertSee(Str::limit($productB->name, 20))
                 ->assertDontSee(Str::limit($productC->name, 20))
                 ->assertDontSee(Str::limit($productD->name, 20))
-                ->screenshot('filter-products-by-brand');
+                ->screenshot('filter-products/filter-products-by-brand');
         });
     }
 
@@ -93,7 +93,7 @@ class FilterProductsTest extends DuskTestCase
                 ->assertDontSee($productB->name)
                 ->assertDontSee($productC->name)
                 ->assertDontSee($productD->name)
-                ->screenshot('search/show-the-product-when-search-its-name');
+                ->screenshot('filter-products/show-the-product-when-search-its-name');
         });
     }
 
@@ -116,7 +116,7 @@ class FilterProductsTest extends DuskTestCase
                 ->assertDontSee($productC->name)
                 ->assertDontSee($productD->name)
                 ->assertSee('Ningún producto coincide con esos parámetros')
-                ->screenshot('search/show-a-message-when-search-is-wrong');
+                ->screenshot('filter-products/show-a-message-when-search-is-wrong');
         });
     }
 
@@ -138,7 +138,7 @@ class FilterProductsTest extends DuskTestCase
                 ->assertSee($productB->name)
                 ->assertSee($productC->name)
                 ->assertSee($productD->name)
-                ->screenshot('search/show-all-products-when-search-is-empty');
+                ->screenshot('filter-products/show-all-products-when-search-is-empty');
         });
     }
 }
