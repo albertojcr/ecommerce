@@ -23,12 +23,4 @@ class ProductController extends Controller
         ]);
     }
 
-    public function deleteImage(Image $image)
-    {
-        Storage::disk('public')->delete([$image->url]);
-
-        $image->delete();
-
-        $this->product = $this->product->fresh();
-    }
 }
