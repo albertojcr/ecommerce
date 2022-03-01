@@ -15,7 +15,7 @@
         <div class="px-6 py-4 flex">
             <x-jet-input class="w-1/3"
                          dusk="search"
-                         wire:model="search"
+                         wire:model="filters.search"
                          type="text"
                          placeholder="Introduzca el nombre del producto a buscar" />
         </div>

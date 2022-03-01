@@ -10,6 +10,7 @@ class ProductFilter extends QueryFilter
     public function rules(): array
     {
         return [
+            'search' => 'filled',
             'category_id' => 'filled|integer|exists:categories,id',
             'subcategory_id' => 'filled|integer|exists:subcategories,id',
             'brand_id' => 'filled|integer|exists:brands,id',
@@ -21,6 +22,11 @@ class ProductFilter extends QueryFilter
             'to' => 'date_format:Y-m-d',
             'price' => 'min:1|max:200'
         ];
+    }
+
+    public function filterBySearch($query, $search)
+    {
+        $query->where('name', 'LIKE', "%{$search}%");
     }
 
     public function filterByCategoryId($query, $categoryId)
