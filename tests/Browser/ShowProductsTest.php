@@ -228,7 +228,7 @@ class ShowProductsTest extends DuskTestCase
     }
 
     /** @test */
-    public function it_shows_size_and_color_dropdowns_in_the_details_view_when_the_product_doesnt_have_both_features()
+    public function it_shows_size_and_color_dropdowns_in_the_details_view_when_the_product_has_both_features()
     {
         $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id, true, true);
