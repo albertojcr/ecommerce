@@ -82,18 +82,6 @@ class EditProductsTest extends TestCase
     }
 
     /** @test  */
-    public function it_attaches_an_image_to_a_product()
-    {
-
-    }
-
-    /** @test  */
-    public function it_deletes_a_product_image()
-    {
-
-    }
-
-    /** @test  */
     public function it_updates_the_product_status()
     {
         $category = $this->createCategory();
