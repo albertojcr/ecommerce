@@ -70,7 +70,7 @@
                 <div>
                     <x-jet-label value="Categoría" />
                     <select class="form-control" wire:model="filters.category_id">
-                        <option value="" selected disabled>Seleccione una categoría</option>
+                        <option value="" class="text-gray-400" selected>Seleccione una categoría</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
@@ -79,7 +79,7 @@
                 <div>
                     <x-jet-label value="Subcategoría" />
                     <select class="w-full form-control" wire:model="filters.subcategory_id">
-                        <option value="" selected disabled>Seleccione una subcategoría</option>
+                        <option value="" class="text-gray-400" selected>Seleccione una subcategoría</option>
                         @foreach($subcategories as $subcategory)
                             <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
                         @endforeach
@@ -88,7 +88,7 @@
                 <div>
                     <x-jet-label value="Marca" />
                     <select class="form-control w-full" wire:model="filters.brand_id">
-                        <option value="" selected disabled>Seleccione una marca</option>
+                        <option value="" class="text-gray-400" selected>Seleccione una marca</option>
                         @foreach ($brands as $brand)
                             <option value="{{$brand->id}}">{{$brand->name}}</option>
                         @endforeach

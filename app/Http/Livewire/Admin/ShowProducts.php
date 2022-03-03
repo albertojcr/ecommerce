@@ -21,7 +21,7 @@ class ShowProducts extends Component
     public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
 
-    public $categories, $subcategories, $brands, $colors, $sizes;
+    public $categories, $subcategories = [], $brands, $colors, $sizes;
 
     public $filters = [
         'search',
@@ -41,8 +41,6 @@ class ShowProducts extends Component
     {
         $this->categories = Category::all();
 
-        $this->subcategories = Subcategory::all();
-
         $this->brands = Brand::all();
 
         $this->colors = Color::all();
@@ -50,6 +48,13 @@ class ShowProducts extends Component
         $this->sizes = Size::selectRaw('DISTINCT name')->pluck('name');
 
         $this->selectedColumns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status'];
+    }
+
+    public function updatedFiltersCategoryId($value)
+    {
+        $this->subcategories = Subcategory::where('category_id', $value)->get();
+
+        $this->filters['subcategory_id'] = '';
     }
 
     public function showColumn($column)
