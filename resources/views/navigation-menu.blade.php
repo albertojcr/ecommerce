@@ -24,6 +24,10 @@
                         Marcas
                     </x-jet-nav-link>
 
+                    <x-jet-nav-link href="{{ route('admin.colors.index') }}" :active="request()->routeIs('admin.colors.*')">
+                        Colores
+                    </x-jet-nav-link>
+
                     <x-jet-nav-link href="{{ route('admin.orders.index') }}" :active="request()->routeIs('admin.orders.*')">
                         Pedidos
                     </x-jet-nav-link>

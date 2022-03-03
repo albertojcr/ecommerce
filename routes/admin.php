@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Livewire\Admin\BrandComponent;
+use App\Http\Livewire\Admin\ColorComponent;
 use App\Http\Livewire\Admin\CreateProduct;
 use App\Http\Livewire\Admin\DepartmentComponent;
 use App\Http\Livewire\Admin\EditProduct;
@@ -38,3 +39,5 @@ Route::get('departments/{department}', ShowDepartment::class)->name('admin.depar
 Route::get('cities/{city}', ShowCity::class)->name('admin.cities.show');
 
 Route::get('users', UserComponent::class)->name('admin.users.index');
+
+Route::get('colors', ColorComponent::class)->name('admin.colors.index');
