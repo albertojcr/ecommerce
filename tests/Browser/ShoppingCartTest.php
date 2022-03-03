@@ -22,8 +22,9 @@ class ShoppingCartTest extends DuskTestCase
 
         $productA = $this->createProduct($subcategory->id, $brand->id);
         $productB = $this->createProduct($subcategory->id, $brand->id);
+        $productC = $this->createProduct($subcategory->id, $brand->id);
 
-        $this->browse(function (Browser $browser) use ($productA, $productB) {
+        $this->browse(function (Browser $browser) use ($productA, $productB, $productC) {
             $browser->visitRoute('products.show', $productA)
                 ->assertButtonEnabled('@add-to-cart-btn')
                 ->press('@add-to-cart-btn')
@@ -34,6 +35,7 @@ class ShoppingCartTest extends DuskTestCase
                 ->pause(1000)
                 ->assertSeeIn('@cart-content', $productA->name)
                 ->assertSeeIn('@cart-content', $productB->name)
+                ->assertDontSeeIn('@cart-content', $productC->name)
                 ->screenshot('shopping-cart/show-cart-content');
         });
     }
@@ -66,8 +68,9 @@ class ShoppingCartTest extends DuskTestCase
 
         $productA = $this->createProduct($subcategory->id, $brand->id);
         $productB = $this->createProduct($subcategory->id, $brand->id);
+        $productC = $this->createProduct($subcategory->id, $brand->id);
 
-        $this->browse(function (Browser $browser) use ($productA, $productB) {
+        $this->browse(function (Browser $browser) use ($productA, $productB, $productC) {
             $browser->visitRoute('products.show', $productA)
                 ->press('@add-to-cart-btn')
                 ->visitRoute('products.show', $productB)
@@ -76,6 +79,7 @@ class ShoppingCartTest extends DuskTestCase
                 ->visitRoute('shopping-cart')
                 ->assertSee($productA->name)
                 ->assertSee($productB->name)
+                ->assertDontSee($productC->name)
                 ->screenshot('shopping-cart/show-cart-content');
         });
     }
@@ -235,7 +239,9 @@ class ShoppingCartTest extends DuskTestCase
                 ->visitRoute('products.show', $product)
                 ->press('@add-to-cart-btn')
                 ->pause(1000)
-                ->logout();
+                ->click('@user-btn')
+                ->pause(1000)
+                ->click('@logout-btn');
         });
 
         $this->assertDatabaseCount('shoppingcart', 1);

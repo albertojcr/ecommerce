@@ -2,7 +2,12 @@
 
 namespace Tests\Feature\Livewire;
 
+use App\Http\Livewire\Admin\ColorProduct;
+use App\Http\Livewire\Admin\ColorSize;
 use App\Http\Livewire\Admin\CreateProduct;
+use App\Http\Livewire\Admin\SizeProduct;
+use App\Models\Product;
+use App\Models\Size;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
@@ -33,7 +38,16 @@ class CreateProductsTest extends TestCase
             ->set('quantity', 10)
             ->call('save');
 
-        $this->assertDatabaseCount('products', 1);
+        $this->assertDatabaseCount('products', 1)
+            ->assertDatabaseHas('products', [
+                'name' => 'Nombre del producto',
+                'slug' => 'nombre-del-producto',
+                'description' => 'Descripción del producto',
+                'price' => 5,
+                'subcategory_id' => $subcategory->id,
+                'brand_id' => $brand->id,
+                'quantity' => 10
+            ]);
     }
 
     /** @test */
@@ -42,10 +56,15 @@ class CreateProductsTest extends TestCase
         $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id, true);
         $brand = $this->createBrand($category->id);
+        $color = $this->createColor();
 
         $user = $this->createAdminUser();
 
         $this->actingAs($user);
+
+        $this->assertDatabaseCount('products', 0)
+            ->assertDatabaseCount('colors', 1)
+            ->assertDatabaseCount('color_product', 0);
 
         Livewire::test(CreateProduct::class)
             ->set('category_id', $category->id)
@@ -57,7 +76,31 @@ class CreateProductsTest extends TestCase
             ->set('price', 5)
             ->call('save');
 
-        $this->assertDatabaseCount('products', 1);
+        $this->assertDatabaseCount('products', 1)
+            ->assertDatabaseHas('products', [
+                'name' => 'Nombre del producto',
+                'slug' => 'nombre-del-producto',
+                'description' => 'Descripción del producto',
+                'price' => 5,
+                'subcategory_id' => $subcategory->id,
+                'brand_id' => $brand->id,
+                'quantity' => null
+            ]);
+
+        $product = Product::first();
+
+        Livewire::test(ColorProduct::class, [
+            'product' => $product
+        ])->set('color_id', $color->id)
+            ->set('quantity', 25)
+            ->call('save');
+
+        $this->assertDatabaseCount('color_product', 1)
+            ->assertDatabaseHas('color_product', [
+                'color_id' => $color->id,
+                'product_id' => $product->id,
+                'quantity' => 25
+            ]);
     }
 
     /** @test */
@@ -66,10 +109,16 @@ class CreateProductsTest extends TestCase
         $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id, true, true);
         $brand = $this->createBrand($category->id);
+        $color = $this->createColor();
 
         $user = $this->createAdminUser();
 
         $this->actingAs($user);
+
+        $this->assertDatabaseCount('products', 0)
+            ->assertDatabaseCount('colors', 1)
+            ->assertDatabaseCount('sizes', 0)
+            ->assertDatabaseCount('color_size', 0);
 
         Livewire::test(CreateProduct::class)
             ->set('category_id', $category->id)
@@ -81,7 +130,44 @@ class CreateProductsTest extends TestCase
             ->set('price', 5)
             ->call('save');
 
-        $this->assertDatabaseCount('products', 1);
+        $this->assertDatabaseCount('products', 1)
+            ->assertDatabaseHas('products', [
+                'name' => 'Nombre del producto',
+                'slug' => 'nombre-del-producto',
+                'description' => 'Descripción del producto',
+                'price' => 5,
+                'subcategory_id' => $subcategory->id,
+                'brand_id' => $brand->id,
+                'quantity' => null
+            ]);
+
+        $product = Product::first();
+
+        Livewire::test(SizeProduct::class, [
+            'product' => $product
+        ])->set('name', 'Talla Ejemplo')
+            ->call('save');
+
+        $this->assertDatabaseCount('sizes', 1)
+            ->assertDatabaseHas('sizes', [
+                'name' => 'Talla Ejemplo',
+                'product_id' => $product->id
+            ]);
+
+        $size = Size::first();
+
+        Livewire::test(ColorSize::class, [
+            'size' => $size
+        ])->set('color_id', $color->id)
+            ->set('quantity', 25)
+            ->call('save');
+
+        $this->assertDatabaseCount('color_size', 1)
+            ->assertDatabaseHas('color_size', [
+                'color_id' => $color->id,
+                'size_id' => $size->id,
+                'quantity' => 25
+            ]);
     }
 
     /** @test  */

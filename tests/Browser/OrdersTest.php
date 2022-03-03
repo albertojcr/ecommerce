@@ -61,7 +61,7 @@ class OrdersTest extends DuskTestCase
                 ->pause(1000)
                 ->visitRoute('orders.create')
                 ->radio('envio_type', 1)
-                ->assertAttributeContains('@address-form', 'class', 'hidden')
+                ->assertMissing('@address-form')
                 ->screenshot('orders/address-form-is-hidden-when-store-pickup');
         });
     }
