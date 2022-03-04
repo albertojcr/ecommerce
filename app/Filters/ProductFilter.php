@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Filters;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;

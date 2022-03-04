@@ -6,7 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
-use App\Models\ProductFilter;
+use App\Filters\ProductFilter;
 use App\Models\Size;
 use App\Models\Subcategory;
 use Livewire\Component;

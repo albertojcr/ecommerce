@@ -1,0 +1,2 @@
+Ejercicio 4 (Filters): ya lo tenía hecho de las tareas, he movido QueryFilter y ProductFilter a App/Filters. 
+La clase ProductFilter se usa tanto para filtrar como para ordenar, todo depende del scope ubicado en App/Models/Product, llamado desde el componente ShowProducts.
