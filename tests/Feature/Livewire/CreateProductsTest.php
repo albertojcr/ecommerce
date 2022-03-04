@@ -19,18 +19,18 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function it_creates_a_simple_product()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
-        $brand = $this->createBrand($category->id);
+        $brand = $this->createBrand($category->id);*/
 
-        $user = $this->createAdminUser();
+        $data = $this->generateData(true,true, true, false, false, true, true);
 
-        $this->actingAs($user);
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -44,8 +44,8 @@ class CreateProductsTest extends TestCase
                 'slug' => 'nombre-del-producto',
                 'description' => 'Descripción del producto',
                 'price' => 5,
-                'subcategory_id' => $subcategory->id,
-                'brand_id' => $brand->id,
+                'subcategory_id' => $data['subcategory']->id,
+                'brand_id' => $data['brand']->id,
                 'quantity' => 10
             ]);
     }
@@ -53,23 +53,27 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function it_creates_a_product_with_color()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id, true);
         $brand = $this->createBrand($category->id);
         $color = $this->createColor();
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, true, false, true, true, false, false, true);
+
+        $this->actingAs($data['user']);
 
         $this->assertDatabaseCount('products', 0)
             ->assertDatabaseCount('colors', 1)
             ->assertDatabaseCount('color_product', 0);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -82,8 +86,8 @@ class CreateProductsTest extends TestCase
                 'slug' => 'nombre-del-producto',
                 'description' => 'Descripción del producto',
                 'price' => 5,
-                'subcategory_id' => $subcategory->id,
-                'brand_id' => $brand->id,
+                'subcategory_id' => $data['subcategory']->id,
+                'brand_id' => $data['brand']->id,
                 'quantity' => null
             ]);
 
@@ -91,13 +95,13 @@ class CreateProductsTest extends TestCase
 
         Livewire::test(ColorProduct::class, [
             'product' => $product
-        ])->set('color_id', $color->id)
+        ])->set('color_id', $data['color']->id)
             ->set('quantity', 25)
             ->call('save');
 
         $this->assertDatabaseCount('color_product', 1)
             ->assertDatabaseHas('color_product', [
-                'color_id' => $color->id,
+                'color_id' => $data['color']->id,
                 'product_id' => $product->id,
                 'quantity' => 25
             ]);
@@ -173,18 +177,22 @@ class CreateProductsTest extends TestCase
     /** @test  */
     public function the_category_id_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
             ->set('category_id', '')
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -199,17 +207,21 @@ class CreateProductsTest extends TestCase
     /** @test  */
     public function the_subcategory_id_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
+            ->set('category_id', $data['category']->id)
             ->set('subcategory_id', '')
-            ->set('brand_id', $brand->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -224,18 +236,22 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function the_name_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', '')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -250,18 +266,22 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function the_slug_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', '')
             ->set('description', 'Descripción del producto')
@@ -276,18 +296,22 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function the_slug_field_is_unique()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -298,9 +322,9 @@ class CreateProductsTest extends TestCase
         $this->assertDatabaseCount('products', 1);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
@@ -315,18 +339,22 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function the_description_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', '')
@@ -341,16 +369,20 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function the_brand_id_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
             ->set('brand_id', '')
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
@@ -366,18 +398,22 @@ class CreateProductsTest extends TestCase
     /** @test */
     public function the_price_field_is_required()
     {
-        $category = $this->createCategory();
+/*        $category = $this->createCategory();
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
         $user = $this->createAdminUser();
 
-        $this->actingAs($user);
+        $this->actingAs($user);*/
+
+        $data = $this->generateData(true,true, true, false, false, true, true);
+
+        $this->actingAs($data['user']);
 
         Livewire::test(CreateProduct::class)
-            ->set('category_id', $category->id)
-            ->set('subcategory_id', $subcategory->id)
-            ->set('brand_id', $brand->id)
+            ->set('category_id', $data['category']->id)
+            ->set('subcategory_id', $data['subcategory']->id)
+            ->set('brand_id', $data['brand']->id)
             ->set('name', 'Nombre del producto')
             ->set('slug', 'nombre-del-producto')
             ->set('description', 'Descripción del producto')
