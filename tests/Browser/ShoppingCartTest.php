@@ -228,15 +228,19 @@ class ShoppingCartTest extends DuskTestCase
         $subcategory = $this->createSubcategory($category->id);
         $brand = $this->createBrand($category->id);
 
-        $product = $this->createProduct($subcategory->id, $brand->id);
+        $productA = $this->createProduct($subcategory->id, $brand->id);
+        $productB = $this->createProduct($subcategory->id, $brand->id);
 
         $user = User::factory()->create();
 
         $this->assertDatabaseCount('shoppingcart', 0);
 
-        $this->browse(function (Browser $browser) use ($product, $user) {
+        $this->browse(function (Browser $browser) use ($productA, $productB, $user) {
             $browser->loginAs($user)
-                ->visitRoute('products.show', $product)
+                ->visitRoute('products.show', $productA)
+                ->press('@add-to-cart-btn')
+                ->pause(1000)
+                ->visitRoute('products.show', $productB)
                 ->press('@add-to-cart-btn')
                 ->pause(1000)
                 ->click('@user-btn')
@@ -246,13 +250,18 @@ class ShoppingCartTest extends DuskTestCase
 
         $this->assertDatabaseCount('shoppingcart', 1);
 
-        $this->browse(function (Browser $browser) use ($product, $user) {
+        $this->browse(function (Browser $browser) use ($productA, $productB, $user) {
             $browser->visitRoute('shopping-cart')
                 ->assertGuest()
                 ->waitForText('TU CARRITO DE COMPRAS ESTÁ VACÍO')
                 ->loginAs($user)
                 ->visitRoute('shopping-cart')
-                ->assertSee($product->name)
+                ->assertSee($productA->name)
+                ->assertSeeIn('@product-' . $productA->id . '-price', $productA->price)
+                ->assertSeeIn('@product-' . $productA->id . '-qty', 1)
+                ->assertSee($productB->name)
+                ->assertSeeIn('@product-' . $productB->id . '-price', $productB->price)
+                ->assertSeeIn('@product-' . $productB->id . '-qty', 1)
                 ->screenshot('shopping-cart/cart-is-saved-when-logout-and-recover-when-login-again');
         });
     }

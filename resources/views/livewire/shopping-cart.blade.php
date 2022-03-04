@@ -57,7 +57,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-500">
-                                <span>{{ $item->price }} &euro;</span>
+                                <span dusk="product-{{ $item->id }}-price">{{ $item->price }} &euro;</span>
                                 <a class="ml-6 cursor-pointer hover:text-red-600"
                                    dusk="remove-product-{{$item->id}}"
                                    wire:click="delete('{{ $item->rowId }}')"
