@@ -18,7 +18,7 @@ class ShowProducts extends Component
 
     public $rowsPerPage = 10, $fieldToOrder, $sortDirection = 'DESC';
 
-    public $columns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status', 'price', 'created_at'];
+    public $columns = ['name', 'vendidos', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status', 'price', 'created_at'];
     public $selectedColumns = [];
 
     public $categories, $subcategories = [], $brands, $colors, $sizes;
@@ -47,7 +47,7 @@ class ShowProducts extends Component
 
         $this->sizes = Size::selectRaw('DISTINCT name')->pluck('name');
 
-        $this->selectedColumns = ['name', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status'];
+        $this->selectedColumns = ['name', 'sold', 'category', 'subcategory', 'brand', 'sizes', 'colors', 'stock', 'status'];
     }
 
     public function updatedFiltersCategoryId($value)

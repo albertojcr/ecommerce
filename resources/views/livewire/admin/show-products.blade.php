@@ -58,7 +58,7 @@
         </div>
 
         <!-- Filtros avanzados -->
-        <div class="px-6 pt-8 pb-14 border-2 bg-indigo-50 hidden" :class="{ 'hidden': !openAdvancedFilters }">
+        <div class="px-6 pt-8 pb-14 border-2 bg-indigo-50 hidden" :class="{ 'hidden': openAdvancedFilters }">
             <div class="flex justify-end">
                 <a class="text-sm cursor-pointer hover:underline inline-block"
                    wire:click="clearFilters">
@@ -209,6 +209,9 @@
                                         </div>
                                     </div>
                                 </td>
+                            @endif
+                            @if($this->showColumn('sold'))
+                                @livewire('admin.sold-products', ['product' => $product], key('product' . $product->id))
                             @endif
                             @if($this->showColumn('category'))
                                 <td class="px-6 py-4 whitespace-nowrap">

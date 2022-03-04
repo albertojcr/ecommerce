@@ -175,4 +175,8 @@ class ProductFilter extends QueryFilter
             ->orderBy('quantity', $direction);
     }
 
+    public function orderBySold($query, $direction)
+    {
+        
+    }
 }
