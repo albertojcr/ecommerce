@@ -2,6 +2,10 @@
 
 namespace App\Filters;
 
+use App\Models\Brand;
+use App\Models\ColorProduct;
+use App\Models\ColorSize;
+use App\Models\Subcategory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
