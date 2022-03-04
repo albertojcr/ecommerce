@@ -1,8 +1,13 @@
 <div>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight capitalize">
-            Usuarios
-        </h2>
+        <div class="flex items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight capitalize">
+                Usuarios
+            </h2>
+            <x-button-link class="ml-auto" href="{{ route('admin.users.create') }}">
+                Agregar usuario
+            </x-button-link>
+        </div>
     </x-slot>
     <div class="container-menu py-12">
         <x-table-responsive>
