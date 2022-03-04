@@ -46,6 +46,11 @@ class Product extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function getStockAttribute(){
         if ($this->subcategory->size) {
             return ColorSize::whereHas('size.product', function(Builder $query){
